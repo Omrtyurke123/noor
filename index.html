@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="description" content="منصة نور — استمع للقرآن الكريم بأصوات أشهر القراء">
+
+<meta property="og:image" content='https://g.co/gemini/share/ea8a850eeb18'>
+<title>نور — القرآن الكريم</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0f;--bg2:#131318;--bg3:#1a1a22;--bg4:#22222e;--bg5:#2a2a38;
+  --ac:#7c6af7;--ac2:#a394ff;--gold:#c9a84c;--gold2:#e8c56a;
+  --green:#1db954;--red:#e74c3c;--t:#f0eeff;--t2:#9490b8;--t3:#4a4768;
+  --bdr:rgba(124,106,247,.1);--sw:234px;--ph:80px;--r:12px;--rs:8px;
+}
+html,body{height:100%;font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t);direction:rtl;overflow:hidden}
+.app{display:grid;grid-template-columns:var(--sw) 1fr;grid-template-rows:1fr var(--ph);height:100vh}
+
+@media(max-width:768px){
+  :root{--sw:0px;--ph:68px}
+  .app{grid-template-columns:1fr!important}
+  .sb{position:fixed;right:-265px;top:0;bottom:var(--ph);width:265px;z-index:100;transition:right .3s}
+  .sb.open{right:0;box-shadow:-6px 0 24px rgba(0,0,0,.5)}
+  .mob-ov{display:block!important}
+  .mob-btn{display:flex!important}
+  .top-links{display:none!important}
+  .pad{padding:14px 14px 28px}
+  .hero{padding:18px 14px;min-height:195px}
+  .h-title{font-size:24px}
+  .rec-hero-grid,.vid-layout,.user-grid,.adm-2col{grid-template-columns:1fr!important}
+  .rec-side,.player-page-sidebar{display:none!important}
+  .sur-grid,.vid-grid{grid-template-columns:1fr!important}
+  .rec-grid{grid-template-columns:repeat(2,1fr)!important}
+  .stat-cards,.adm-stats-grid{grid-template-columns:repeat(2,1fr)!important}
+  .adm-form-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:480px){.rec-grid{grid-template-columns:1fr!important}.alb-grid{grid-template-columns:repeat(2,1fr)!important}}
+.mob-ov{display:none;inset:0;background:rgba(0,0,0,.6);z-index:99;backdrop-filter:blur(4px)}
+.mob-btn{display:none;width:34px;height:34px;border-radius:var(--rs);background:var(--bg3);border:1px solid var(--bdr);color:var(--t2);cursor:pointer;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+
+/* ── SIDEBAR ── */
+.sb{background:var(--bg2);border-left:1px solid var(--bdr);display:flex;flex-direction:column;overflow:hidden}
+.sb-top{padding:18px 16px 10px;flex-shrink:0}
+.sb-logo{font-size:19px;font-weight:800}.sb-logo em{color:var(--ac);font-style:normal}
+.sb-sub{font-size:10px;color:var(--t3);margin-top:1px;letter-spacing:.5px}
+.sb-nav{padding:4px 8px;flex-shrink:0}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:var(--rs);cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);transition:all .14s}
+.ni:hover{color:var(--t);background:rgba(124,106,247,.07)}
+.ni.on{color:var(--t);background:rgba(124,106,247,.13)}
+.ni.on .ni-ic{color:var(--ac)}
+.ni-ic{font-size:15px;width:18px;text-align:center}
+/* Admin nav item — special style */
+.ni.adm-ni{border:1px solid rgba(231,76,60,.2);background:rgba(231,76,60,.05);margin-top:3px}
+.ni.adm-ni:hover{background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.35)}
+.ni.adm-ni .ni-ic{color:var(--red)}
+.sb-sep{height:1px;background:var(--bdr);margin:5px 16px}
+.sb-lbl{font-size:9px;color:var(--t3);padding:5px 16px 2px;letter-spacing:.7px;font-weight:700}
+.sb-rec-list{flex:1;overflow-y:auto;padding:2px 8px 8px}
+.sb-it{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:7px;cursor:pointer;transition:all .13s}
+.sb-it:hover{background:rgba(124,106,247,.06)}
+.sb-it.on{background:rgba(124,106,247,.12)}
+.sb-it.on .sb-nm{color:var(--t)}
+.sb-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.sb-nm{font-size:11px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user{padding:10px 14px;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:9px;flex-shrink:0;cursor:pointer;transition:background .13s}
+.sb-user:hover{background:rgba(124,106,247,.05)}
+.u-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--gold));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.u-nm{font-size:12px;font-weight:600}.u-tag{font-size:9px;font-weight:700}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:20;padding:9px 18px;display:flex;align-items:center;gap:10px;background:rgba(12,12,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.srch{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--bdr);border-radius:20px;padding:7px 14px;flex:1;max-width:300px;min-width:0;transition:border-color .2s}
+.srch:focus-within{border-color:rgba(124,106,247,.4)}
+.srch input{background:none;border:none;color:var(--t);font-family:'Tajawal';font-size:12px;outline:none;flex:1;min-width:0}
+.srch input::placeholder{color:var(--t3)}
+.top-links{display:flex;gap:16px;margin-right:auto}
+.tl{font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;transition:color .14s;padding-bottom:2px;border-bottom:2px solid transparent}
+.tl:hover,.tl.on{color:var(--t);border-bottom-color:var(--ac)}
+.icon-btn{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--bdr);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .14s;flex-shrink:0}
+.icon-btn:hover{color:var(--t);border-color:rgba(124,106,247,.3)}
+/* Admin icon btn — red accent */
+.icon-btn.adm-icon{border-color:rgba(231,76,60,.25);color:var(--red)}
+.icon-btn.adm-icon:hover{background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.5)}
+
+/* ── PAGES ── */
+.main{overflow-y:auto;background:var(--bg);display:flex;flex-direction:column}
+.page{display:none;flex-direction:column;animation:fi .2s ease}
+.page.on{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.pad{padding:22px 22px 30px}
+
+/* ── HERO ── */
+.hero{min-height:255px;display:flex;align-items:flex-end;padding:26px;position:relative;overflow:hidden;flex-shrink:0}
+.h-layer{position:absolute;inset:0}
+.h-grad{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 15%,transparent 70%)}
+.h-body{position:relative;z-index:2;max-width:520px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,106,247,.15);border:1px solid rgba(124,106,247,.3);border-radius:18px;padding:4px 12px;font-size:10px;font-weight:700;color:var(--ac);letter-spacing:.6px;margin-bottom:12px}
+.h-title{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:8px}
+.h-desc{font-size:12px;color:var(--t2);line-height:1.75;margin-bottom:18px;max-width:400px}
+.acts{display:flex;gap:9px;flex-wrap:wrap}
+.btn-p{display:flex;align-items:center;gap:6px;padding:10px 20px;background:var(--ac);border:none;border-radius:24px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:'Tajawal';transition:all .17s}
+.btn-p:hover{background:var(--ac2);transform:translateY(-1px)}
+.btn-g{padding:9px 18px;background:transparent;border:1px solid rgba(255,255,255,.17);border-radius:24px;color:var(--t);font-weight:600;font-size:12px;cursor:pointer;font-family:'Tajawal';transition:all .17s}
+.btn-g:hover{border-color:rgba(255,255,255,.35)}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.sec-t{font-size:16px;font-weight:700}
+.sec-lk{font-size:11px;font-weight:600;color:var(--ac);cursor:pointer;transition:opacity .14s}
+.sec-lk:hover{opacity:.7}
+.mb22{margin-bottom:22px}
+
+/* ── SURAHS ── */
+.sur-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}
+.sc{background:var(--bg2);border-radius:var(--rs);padding:11px 13px;cursor:pointer;transition:all .16s;border:1px solid var(--bdr);display:flex;align-items:center;gap:10px}
+.sc:hover{background:var(--bg3);border-color:rgba(124,106,247,.2);transform:translateY(-1px)}
+.sc.pl{border-color:var(--ac);background:rgba(124,106,247,.08)}
+.sc-num{width:31px;height:31px;border-radius:50%;background:var(--bg4);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;transition:all .16s}
+.sc:hover .sc-num,.sc.pl .sc-num{background:rgba(124,106,247,.15);border-color:var(--ac);color:var(--ac)}
+.sc-info{flex:1;min-width:0}
+.sc-ar{font-family:'Amiri';font-size:16px;margin-bottom:1px}
+.sc-en{font-size:9px;color:var(--t3)}
+.sc-tags{display:flex;gap:4px;margin-top:2px;align-items:center}
+.tag{font-size:8px;padding:1px 5px;border-radius:6px;font-weight:700}
+.tag-mak{background:rgba(201,168,76,.1);color:var(--gold)}
+.tag-mad{background:rgba(29,185,84,.1);color:var(--green)}
+.tag-cnt{font-size:9px;color:var(--t3)}
+.sc-play{width:26px;height:26px;border-radius:50%;background:var(--ac);border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.85);transition:all .16s;flex-shrink:0}
+.sc:hover .sc-play{opacity:1;transform:scale(1)}
+
+/* ── RECITERS ── */
+.rec-hero-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:12px;margin-bottom:22px}
+.rec-big{position:relative;border-radius:var(--r);overflow:hidden;min-height:215px;cursor:pointer;display:flex;align-items:flex-end}
+.rec-big-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.rec-big-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 45%,rgba(0,0,0,.08))}
+.rec-big-body{position:relative;z-index:2;padding:15px}
+.rec-badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:700;letter-spacing:.4px;margin-bottom:6px}
+.rec-big-name{font-size:18px;font-weight:800;margin-bottom:3px}
+.rec-big-sub{font-size:9px;color:rgba(255,255,255,.5);margin-bottom:11px}
+.rec-play{width:33px;height:33px;border-radius:50%;border:none;color:#000;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .17s;font-weight:700}
+.rec-play:hover{transform:scale(1.09)}
+.rec-sm{background:var(--bg3);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .18s;border:1px solid var(--bdr);display:flex;flex-direction:column;position:relative}
+.rec-sm:hover{background:var(--bg4);border-color:rgba(124,106,247,.22);transform:translateY(-2px)}
+.rec-sm-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;margin-bottom:8px}
+.rec-sm-name{font-size:11px;font-weight:700;margin-bottom:2px}
+.rec-sm-style{font-size:9px;font-weight:600;margin-bottom:2px}
+.rec-sm-cnt{font-size:9px;color:var(--t3)}
+.rec-sm-play{position:absolute;bottom:10px;left:10px;width:25px;height:25px;border-radius:50%;border:none;color:#000;font-size:10px;cursor:pointer;opacity:0;transform:translateY(4px);transition:all .17s}
+.rec-sm:hover .rec-sm-play{opacity:1;transform:none}
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:10px}
+.rc{background:var(--bg2);border-radius:var(--r);padding:13px 11px;cursor:pointer;transition:all .18s;border:1px solid var(--bdr);text-align:center;position:relative}
+.rc:hover{background:var(--bg3);border-color:rgba(124,106,247,.25);transform:translateY(-2px)}
+.rc.cur{border-color:var(--ac);background:rgba(124,106,247,.08)}
+.rc-av{width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 9px;font-size:23px;font-weight:800;border:2px solid;position:relative}
+.rc-check{position:absolute;top:6px;left:6px;font-size:11px;color:var(--ac);display:none}
+.rc.cur .rc-check{display:block}
+.rc-ring{position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--bg2);display:none}
+.rc.cur .rc-ring{display:block}
+.rc-name{font-size:11px;font-weight:700;margin-bottom:2px}
+.rc-style{font-size:10px;font-weight:600;margin-bottom:2px}
+.rc-info{font-size:9px;color:var(--t3)}
+.rc-cnt{font-size:9px;color:var(--t3);margin-top:2px}
+.rc-btn{width:28px;height:28px;border-radius:50%;border:none;color:#000;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:7px auto 0;opacity:0;transform:translateY(3px);transition:all .17s;font-weight:700}
+.rc:hover .rc-btn{opacity:1;transform:none}
+.rph{min-height:215px;display:flex;align-items:flex-end;padding:20px;position:relative;overflow:hidden;flex-shrink:0}
+.rph-bg{position:absolute;inset:0}
+.rph-ov{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 22%,transparent)}
+.rph-body{position:relative;z-index:2}
+.rph-av{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;border:3px solid;margin-bottom:10px}
+.rph-name{font-size:27px;font-weight:800;margin-bottom:3px}
+.rph-meta{font-size:11px;color:var(--t2);margin-bottom:11px;display:flex;gap:12px;flex-wrap:wrap}
+.alb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;margin-bottom:20px}
+.alb{background:var(--bg2);border-radius:var(--r);padding:11px;cursor:pointer;transition:all .18s;border:1px solid var(--bdr);position:relative}
+.alb:hover{background:var(--bg3);border-color:rgba(124,106,247,.22);transform:translateY(-2px)}
+.alb-cv{width:100%;aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:28px;position:relative;overflow:hidden}
+.alb-pl{position:absolute;bottom:6px;left:6px;width:25px;height:25px;border-radius:50%;border:none;color:#000;font-size:11px;cursor:pointer;opacity:0;transform:translateY(4px);transition:all .17s;font-weight:700}
+.alb:hover .alb-pl{opacity:1;transform:none}
+.alb-name{font-size:10px;font-weight:700;margin-bottom:2px}
+.alb-meta{font-size:9px;color:var(--t3)}
+
+/* ── SURAH VIEW ── */
+.sur-hdr{min-height:165px;display:flex;align-items:flex-end;padding:18px 20px;position:relative;overflow:hidden;flex-shrink:0}
+.sh-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0d1030,#0c0c0f)}
+.sh-ov{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 18%,transparent)}
+.sh-body{position:relative;z-index:2}
+.sh-ar{font-family:'Amiri';font-size:32px;font-weight:700;margin-bottom:4px}
+.sh-en{font-size:12px;color:var(--t2);margin-bottom:8px}
+.sh-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:9px;padding:2px 10px;border-radius:14px;border:1px solid}
+.pill-mak{border-color:rgba(201,168,76,.3);color:var(--gold);background:rgba(201,168,76,.07)}
+.pill-mad{border-color:rgba(29,185,84,.3);color:var(--green);background:rgba(29,185,84,.07)}
+.pill-def{border-color:var(--bdr);color:var(--t3)}
+.bismi{font-family:'Amiri Quran';font-size:17px;color:var(--t2);text-align:center;padding:11px;border-bottom:1px solid var(--bdr)}
+.sur-tb{padding:10px 20px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--bdr);flex-shrink:0;flex-wrap:wrap}
+.sur-ayahs{flex:1;overflow-y:auto;padding:4px 20px 26px}
+.ayah-row{padding:14px 10px;border-bottom:1px solid rgba(124,106,247,.06);border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:2px}
+.ayah-row:hover{background:rgba(124,106,247,.04)}
+.ay-ar{font-family:'Amiri Quran';font-size:21px;line-height:2.1;direction:rtl;margin-bottom:8px}
+.ay-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(124,106,247,.12);border:1px solid rgba(124,106,247,.25);font-size:9px;font-weight:700;color:var(--ac);font-family:'Tajawal';vertical-align:middle;margin:0 4px}
+.ay-tr{font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:7px}
+.ay-acts{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.ay-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:13px;border:1px solid var(--bdr);background:none;color:var(--t3);font-size:10px;cursor:pointer;font-family:'Tajawal';transition:all .12s}
+.ay-btn:hover{color:var(--t);border-color:rgba(124,106,247,.3);background:rgba(124,106,247,.05)}
+.ay-btn.on{color:var(--ac);border-color:rgba(124,106,247,.3)}
+
+/* ── PLAYER PAGE ── */
+.player-page-layout{display:flex;height:100%;overflow:hidden}
+.player-page-main{flex:1;min-width:0;overflow-y:auto}
+.player-page-sidebar{width:270px;background:var(--bg2);border-right:1px solid var(--bdr);overflow-y:auto;flex-shrink:0}
+.pps-title{font-size:12px;font-weight:700;padding:12px 14px;border-bottom:1px solid var(--bdr);position:sticky;top:0;background:var(--bg2);z-index:1}
+.pps-item{display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(124,106,247,.04);transition:background .13s}
+.pps-item:hover{background:rgba(124,106,247,.06)}
+.pps-item.on{background:rgba(124,106,247,.12)}
+.pps-num{width:23px;height:23px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t3);flex-shrink:0}
+.pps-item.on .pps-num{background:rgba(124,106,247,.2);color:var(--ac)}
+.pps-name{font-family:'Amiri';font-size:14px;flex:1}
+.pps-ayahs{font-size:9px;color:var(--t3)}
+.pps-item.on .pps-name{color:var(--ac)}
+/* Player hero */
+.player-hero{min-height:240px;position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:flex-end}
+.ph-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0d0d28,#0c0c0f);transition:background .4s}
+.ph-ov{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 25%,rgba(0,0,0,.2))}
+.ph-content{position:relative;z-index:2;padding:22px}
+.ph-badge{font-size:11px;color:var(--t2);margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.ph-title{font-family:'Amiri';font-size:42px;color:var(--t);margin-bottom:3px}
+.ph-sub{font-size:13px;color:var(--t2);margin-bottom:16px}
+/* Audio card */
+.audio-card{background:rgba(12,12,15,.92);backdrop-filter:blur(18px);border:1px solid rgba(124,106,247,.14);border-radius:18px;padding:20px;margin:0 20px 16px}
+.aud-info{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.aud-cover{width:58px;height:58px;border-radius:10px;background:linear-gradient(135deg,var(--bg4),var(--bg3));border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-family:'Amiri';font-size:24px;color:var(--ac);flex-shrink:0;transition:background .4s}
+.aud-title{font-size:18px;font-weight:800;margin-bottom:3px}
+.aud-rec{font-size:12px;color:var(--t2);margin-bottom:3px}
+.aud-src-badge{font-size:9px;padding:2px 8px;border-radius:10px;border:1px solid;display:inline-block}
+.aud-src-ok{border-color:rgba(29,185,84,.3);color:var(--green);background:rgba(29,185,84,.08)}
+.aud-src-loading{border-color:rgba(201,168,76,.3);color:var(--gold);background:rgba(201,168,76,.08)}
+.aud-src-err{border-color:rgba(231,76,60,.3);color:var(--red);background:rgba(231,76,60,.08)}
+/* Progress */
+.aud-prog-row{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.aud-tm{font-size:11px;color:var(--t3);min-width:36px}
+.aud-tm.r{text-align:left}
+.aud-prog{flex:1;height:5px;background:var(--bg5);border-radius:3px;cursor:pointer;position:relative}
+.aud-prog-f{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .2s}
+.aud-prog:hover .aud-prog-f{filter:brightness(1.15)}
+.aud-prog-th{width:13px;height:13px;border-radius:50%;background:#fff;position:absolute;top:50%;transform:translate(50%,-50%);right:0;opacity:0;transition:opacity .15s;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.aud-prog:hover .aud-prog-th{opacity:1}
+/* Controls */
+.aud-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:16px}
+.aud-cb{background:none;border:none;color:var(--t2);cursor:pointer;font-size:21px;padding:4px;transition:color .15s;display:flex;align-items:center}
+.aud-cb:hover{color:var(--t)}.aud-cb.on{color:var(--ac)}
+.aud-pb{width:52px;height:52px;border-radius:50%;background:var(--ac);border:none;color:#fff;cursor:pointer;font-size:21px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 4px 18px rgba(124,106,247,.4)}
+.aud-pb:hover{background:var(--ac2);transform:scale(1.06)}
+.aud-pb:disabled{opacity:.4;cursor:not-allowed;background:var(--bg5);box-shadow:none}
+/* Bottom */
+.aud-bottom{display:flex;align-items:center;gap:10px}
+.aud-vol{display:flex;align-items:center;gap:6px;flex:1}
+.aud-vol-ic{color:var(--t3);font-size:14px;cursor:pointer;transition:color .13s}
+.aud-vol-ic:hover{color:var(--t)}
+input[type=range].aud-vol-sl{flex:1;height:3px;background:var(--bg5);border-radius:2px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none}
+input[type=range].aud-vol-sl::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:var(--t);cursor:pointer}
+.aud-extra{display:flex;gap:7px}
+.aud-ex-btn{padding:5px 11px;border-radius:13px;border:1px solid var(--bdr);background:none;color:var(--t3);font-size:10px;cursor:pointer;font-family:'Tajawal';transition:all .12s}
+.aud-ex-btn:hover{color:var(--t);border-color:rgba(124,106,247,.3)}
+/* Spinner */
+.spinner{width:17px;height:17px;border:2px solid var(--bg5);border-top-color:var(--ac);border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* ── VIDEOS ── */
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:22px}
+.vid-card{background:var(--bg2);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s;border:1px solid var(--bdr)}
+.vid-card:hover{border-color:rgba(124,106,247,.3);transform:translateY(-2px)}
+.vid-thumb{width:100%;aspect-ratio:16/9;background:var(--bg4);position:relative;overflow:hidden}
+.vid-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vid-play-ov{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.vid-card:hover .vid-play-ov{opacity:1}
+.vid-play-ic{width:44px;height:44px;border-radius:50%;background:rgba(255,0,0,.85);display:flex;align-items:center;justify-content:center;font-size:17px}
+.vid-dur{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.8);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:600}
+.vid-info{padding:10px 12px}
+.vid-title{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vid-channel{font-size:10px;color:var(--t3)}
+.vid-meta{font-size:9px;color:var(--t3);margin-top:2px}
+/* video watch */
+.vid-layout{display:grid;grid-template-columns:1fr 290px;gap:16px;padding:18px}
+.vid-player-wrap{background:var(--bg2);border-radius:var(--r);overflow:hidden;border:1px solid var(--bdr)}
+.vid-iframe-wrap{width:100%;aspect-ratio:16/9;background:#000}
+.vid-iframe-wrap iframe{width:100%;height:100%;border:none}
+.vid-details{padding:14px}
+.vid-page-title{font-size:15px;font-weight:800;margin-bottom:5px;line-height:1.4}
+.vid-page-meta{font-size:11px;color:var(--t3);margin-bottom:9px;display:flex;gap:10px;flex-wrap:wrap}
+.vid-page-desc{font-size:12px;color:var(--t2);line-height:1.8;border-top:1px solid var(--bdr);padding-top:10px}
+.vid-err-msg{font-size:11px;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:7px;padding:8px 12px;margin-top:8px}
+.vid-side-list{display:flex;flex-direction:column;gap:8px;max-height:calc(100vh-100px);overflow-y:auto}
+.vid-side-item{display:flex;gap:8px;cursor:pointer;padding:7px;border-radius:var(--rs);border:1px solid transparent;transition:background .13s}
+.vid-side-item:hover{background:var(--bg2);border-color:var(--bdr)}
+.vid-side-item.on{background:rgba(124,106,247,.1);border-color:rgba(124,106,247,.2)}
+.vid-side-thumb{width:88px;aspect-ratio:16/9;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--bg4)}
+.vid-side-thumb img{width:100%;height:100%;object-fit:cover}
+.vid-side-title{font-size:10px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:2px}
+.vid-side-meta{font-size:9px;color:var(--t3)}
+
+/* ── AUTH ── */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.modal-box{width:375px;max-width:100%;background:var(--bg2);border:1px solid var(--bdr);border-radius:20px;padding:27px}
+.auth-logo{text-align:center;margin-bottom:17px}
+.auth-logo-ic{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--gold));display:flex;align-items:center;justify-content:center;font-size:19px;margin:0 auto 8px}
+.auth-tabs{display:flex;background:var(--bg3);border-radius:var(--rs);padding:3px;gap:3px;margin-bottom:14px}
+.auth-tab{flex:1;padding:7px;border-radius:6px;border:none;background:transparent;color:var(--t2);cursor:pointer;font-family:'Tajawal';font-size:12px;font-weight:600;transition:all .18s}
+.auth-tab.on{background:var(--ac);color:#fff}
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:10px;font-weight:700;color:var(--t3);margin-bottom:4px;letter-spacing:.3px}
+.inp{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);color:var(--t);font-family:'Tajawal';font-size:13px;outline:none;transition:border-color .18s}
+.inp:focus{border-color:var(--ac)}
+.inp::placeholder{color:var(--t3)}
+.auth-btn{width:100%;padding:11px;background:var(--ac);border:none;border-radius:var(--rs);color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:'Tajawal';transition:all .18s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px}
+.auth-btn:hover{background:var(--ac2)}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed}
+.auth-err{font-size:11px;color:var(--red);margin-top:6px;min-height:16px;text-align:center}
+.auth-close{display:block;text-align:center;font-size:11px;color:var(--t3);cursor:pointer;margin-top:12px;transition:color .14s}
+.auth-close:hover{color:var(--t)}
+
+/* ── PROFILE ── */
+.user-grid{display:grid;grid-template-columns:250px 1fr;gap:16px}
+.user-card{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bdr);padding:18px;text-align:center}
+.up-av{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--gold));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;margin:0 auto 11px}
+.up-name{font-size:16px;font-weight:800;margin-bottom:3px}
+.up-email{font-size:10px;color:var(--t3);margin-bottom:10px}
+.up-role{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px;margin-bottom:10px}
+.up-role.admin{background:rgba(231,76,60,.15);color:var(--red);border:1px solid rgba(231,76,60,.3)}
+.up-role.user{background:rgba(29,185,84,.12);color:var(--green);border:1px solid rgba(29,185,84,.2)}
+.up-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.ups{background:var(--bg3);border-radius:var(--rs);padding:9px;text-align:center}
+.ups-n{font-size:17px;font-weight:800;color:var(--ac)}
+.ups-l{font-size:9px;color:var(--t3);margin-top:1px}
+.up-btn{width:100%;margin-top:8px;padding:7px;background:rgba(124,106,247,.12);border:1px solid rgba(124,106,247,.2);border-radius:var(--rs);color:var(--ac);cursor:pointer;font-size:11px;font-weight:600;font-family:'Tajawal';transition:all .15s}
+.up-btn:hover{background:rgba(124,106,247,.2)}
+.up-btn.danger{color:var(--red);border-color:rgba(231,76,60,.2)}
+.up-btn.adm-btn-special{color:var(--red);border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.07)}
+.up-btn.adm-btn-special:hover{background:rgba(231,76,60,.15)}
+.khatma-box{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bdr);padding:14px;margin-bottom:11px}
+.kh-bar-wrap{height:7px;background:var(--bg4);border-radius:4px;overflow:hidden;margin:8px 0 5px}
+.kh-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ac),var(--gold));transition:width .5s}
+.kh-meta{font-size:10px;color:var(--t3);display:flex;justify-content:space-between}
+.user-tabs{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap}
+.utab{padding:5px 11px;border-radius:14px;border:1px solid var(--bdr);background:transparent;color:var(--t2);cursor:pointer;font-family:'Tajawal';font-size:11px;font-weight:500;transition:all .15s}
+.utab.on{background:rgba(124,106,247,.15);border-color:var(--ac);color:var(--ac)}
+
+/* ── BOOKMARKS ── */
+.bm-item{background:var(--bg2);border-radius:10px;padding:11px;border:1px solid var(--bdr);cursor:pointer;transition:all .13s;display:flex;gap:10px;margin-bottom:6px}
+.bm-item:hover{background:var(--bg3);border-color:rgba(124,106,247,.2)}
+.bm-num{width:27px;height:27px;border-radius:50%;background:rgba(124,106,247,.1);border:1px solid rgba(124,106,247,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ac);flex-shrink:0}
+.bm-txt{font-family:'Amiri Quran';font-size:14px;line-height:1.9;margin-bottom:3px}
+.bm-meta{font-size:10px;color:var(--t3)}
+
+/* ── STATS ── */
+.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stc{background:var(--bg2);border-radius:var(--r);padding:15px;border:1px solid var(--bdr)}
+.stc-ic{font-size:18px;margin-bottom:6px}
+.stc-n{font-size:22px;font-weight:800;color:var(--ac);margin-bottom:2px}
+.stc-l{font-size:9px;color:var(--t3)}
+
+.zk.done 
+
+.zk-btn{width:100%;padding:6px;background:rgba(124,106,247,.1);border:1px solid rgba(124,106,247,.17);border-radius:7px;color:var(--ac);cursor:pointer;font-size:11px;font-weight:600;font-family:'Tajawal';transition:all .13s}
+.zk.done .zk-btn{background:rgba(29,185,84,.08);border-color:rgba(29,185,84,.2);color:var(--green)}
+
+/* ── SEARCH ── */
+.genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.genre-c{border-radius:10px;padding:14px 12px;cursor:pointer;min-height:94px;display:flex;align-items:flex-end;position:relative;overflow:hidden;transition:transform .17s}
+.genre-c:hover{transform:scale(1.03)}
+.genre-ic{position:absolute;top:10px;left:10px;font-size:24px;opacity:.85}
+.genre-nm{font-size:12px;font-weight:800;position:relative;z-index:1}
+
+/* ── ADMIN ── */
+.adm-panel{position:fixed;inset:0;background:#080810;z-index:290;display:none;flex-direction:column}
+.adm-panel.show{display:flex}
+.adm-login-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);z-index:300;display:none;align-items:center;justify-content:center}
+.adm-login-modal.show{display:flex}
+.adm-login-box{width:335px;max-width:92vw;background:#0e0e1a;border:1px solid rgba(108,92,231,.2);border-radius:17px;padding:27px;text-align:center}
+.adm-tb{padding:10px 17px;background:rgba(8,8,16,.95);border-bottom:1px solid rgba(108,92,231,.12);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.adm-tb-title{font-size:13px;font-weight:700}
+.adm-tabs{display:flex;gap:5px;overflow-x:auto;padding:2px}
+.adm-tab{padding:6px 11px;border-radius:14px;border:1px solid rgba(108,92,231,.2);background:transparent;color:var(--t2);cursor:pointer;font-family:'Tajawal';font-size:11px;font-weight:600;white-space:nowrap;transition:all .15s}
+.adm-tab:hover{color:var(--t);border-color:rgba(108,92,231,.4)}
+.adm-tab.on{background:rgba(108,92,231,.18);border-color:#6c5ce7;color:#fff}
+.adm-content{flex:1;overflow-y:auto;padding:17px}
+.adm-page{display:none}.adm-page.on{display:block}
+.adm-section{background:#0e0e1a;border-radius:var(--r);border:1px solid rgba(108,92,231,.12);margin-bottom:13px;overflow:hidden}
+.adm-section-hd{padding:12px 16px;border-bottom:1px solid rgba(108,92,231,.1);display:flex;align-items:center;justify-content:space-between}
+.adm-section-title{font-size:12px;font-weight:700}
+.adm-section-body{padding:15px}
+.adm-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;margin-bottom:15px}
+.adm-stat-c{background:#0e0e1a;border-radius:var(--r);padding:14px;border:1px solid rgba(108,92,231,.12);position:relative;overflow:hidden}
+.adm-stat-n{font-size:21px;font-weight:800;margin-bottom:2px}
+.adm-stat-l{font-size:9px;color:var(--t3)}
+.adm-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.adm-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.afg{display:flex;flex-direction:column;gap:4px}
+.afg.full{grid-column:1/-1}
+.afg label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.3px}
+.ainp{width:100%;padding:8px 11px;background:#151525;border:1px solid rgba(108,92,231,.15);border-radius:var(--rs);color:var(--t);font-family:'Tajawal';font-size:12px;outline:none;transition:border-color .18s}
+.ainp:focus{border-color:#6c5ce7}
+.ainp::placeholder{color:var(--t3)}
+.ainp option{background:#151525}
+textarea.ainp{resize:vertical;min-height:62px}
+.adm-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rs);border:none;cursor:pointer;font-size:11px;font-weight:600;font-family:'Tajawal';transition:all .17s}
+.adm-btn-p{background:#6c5ce7;color:#fff}.adm-btn-p:hover{background:#a29bfe}
+.adm-btn-s{background:rgba(108,92,231,.1);color:#a29bfe;border:1px solid rgba(108,92,231,.2)}.adm-btn-s:hover{background:rgba(108,92,231,.18)}
+.adm-btn-d{background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.2)}.adm-btn-d:hover{background:rgba(231,76,60,.2)}
+.adm-btn-g{background:rgba(29,185,84,.1);color:var(--green);border:1px solid rgba(29,185,84,.2)}.adm-btn-g:hover{background:rgba(29,185,84,.2)}
+.adm-acts{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.adm-tbl{width:100%;border-collapse:collapse}
+.adm-tbl th{font-size:10px;color:var(--t3);text-align:right;padding:8px 11px;border-bottom:1px solid rgba(108,92,231,.1);background:#151525;font-weight:700}
+.adm-tbl td{padding:9px 11px;font-size:11px;border-bottom:1px solid rgba(108,92,231,.06);vertical-align:middle}
+.adm-tbl tr:hover td{background:rgba(108,92,231,.03)}
+.adm-tbl tr:last-child td{border-bottom:none}
+.adm-tag{display:inline-block;padding:2px 7px;border-radius:9px;font-size:9px;font-weight:700}
+.at-g{background:rgba(29,185,84,.12);color:var(--green)}
+.at-b{background:rgba(52,152,219,.12);color:#3498db}
+.at-y{background:rgba(201,168,76,.12);color:var(--gold)}
+.at-r{background:rgba(231,76,60,.12);color:var(--red)}
+.at-p{background:rgba(108,92,231,.12);color:#a29bfe}
+.adm-notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#0e0e1a;border:1px solid rgba(108,92,231,.3);border-radius:var(--rs);padding:8px 14px;font-size:12px;font-weight:500;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.adm-notif.show{opacity:1}
+.color-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.cdot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.cdot.sel{border-color:#fff;transform:scale(1.12)}
+.api-res{background:#151525;border-radius:var(--rs);padding:10px;font-size:11px;color:var(--t2);font-family:monospace;max-height:120px;overflow-y:auto;border:1px solid rgba(108,92,231,.1);white-space:pre-wrap;word-break:break-all;margin-top:8px;display:none}
+.api-res.show{display:block}
+.db-view-wrap{overflow-x:auto;max-height:380px;overflow-y:auto}
+
+/* ── MINI PLAYER ── */
+.mini-player{grid-column:1/-1;grid-row:2;background:rgba(13,13,18,.97);border-top:1px solid var(--bdr);display:flex;align-items:center;padding:0 14px;z-index:30;backdrop-filter:blur(18px)}
+.mp-left{display:flex;align-items:center;gap:9px;flex:1;min-width:0;cursor:pointer}
+.mp-thumb{width:40px;height:40px;border-radius:7px;background:var(--bg4);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-family:'Amiri';font-size:16px;color:var(--ac);flex-shrink:0;transition:background .4s}
+.mp-info{flex:1;min-width:0}
+.mp-title{font-size:11px;font-weight:600;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:1px}
+.mp-reciter{font-size:9px;color:var(--t3)}
+.mp-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.mp-cb{background:none;border:none;color:var(--t2);cursor:pointer;font-size:17px;padding:4px;transition:color .12s}
+.mp-cb:hover{color:var(--t)}
+.mp-pb{width:33px;height:33px;border-radius:50%;background:var(--t);border:none;color:#000;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .17s;font-weight:700;flex-shrink:0}
+.mp-pb:hover{background:var(--ac);color:#fff;transform:scale(1.07)}
+.mp-pb:disabled{opacity:.35;cursor:not-allowed}
+.mp-prog-wrap{flex:1;padding:0 12px;max-width:320px}
+@media(max-width:600px){.mp-prog-wrap,.mp-right{display:none!important}}
+.mp-prog{height:3px;background:var(--bg5);border-radius:2px;cursor:pointer;position:relative}
+.mp-prog-f{height:100%;border-radius:2px;background:var(--ac);transition:width .2s}
+.mp-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.vol-row{display:flex;align-items:center;gap:5px}
+.vic{color:var(--t3);cursor:pointer;font-size:13px;transition:color .12s}
+.vic:hover{color:var(--t)}
+input[type=range].vs{width:62px;height:3px;background:var(--bg5);border-radius:2px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none}
+input[type=range].vs::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:var(--t);cursor:pointer}
+
+/* ── MISC ── */
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid rgba(124,106,247,.3);border-radius:8px;padding:8px 14px;font-size:11px;font-weight:500;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.toast.show{opacity:1}
+.ls{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:13px}
+.ls-ar{font-family:'Amiri Quran';font-size:27px;color:var(--gold2)}
+.ls-logo{font-size:21px;font-weight:800}.ls-logo em{color:var(--ac);font-style:normal}
+.ls-bar{width:165px;height:2px;background:var(--bg3);border-radius:1px;overflow:hidden}
+.ls-fill{height:100%;background:var(--ac);animation:lb 3s ease forwards}
+@keyframes lb{from{width:0}to{width:100%}}
+.ls-txt{font-size:11px;color:var(--t3)}
+.empty{text-align:center;padding:40px 20px;color:var(--t3);font-size:12px}
+.empty span{display:block;font-size:28px;margin-bottom:8px}
+
+.vid-open-yt{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#ff0000;border:none;border-radius:20px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Tajawal';text-decoration:none;margin-top:4px;transition:opacity .15s}
+.vid-open-yt:hover{opacity:.85}
+
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="ls" id="ls">
+  <div class="ls-ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+  <div class="ls-logo">نـ<em>ور</em></div>
+  <div class="ls-bar"><div class="ls-fill"></div></div>
+  <div class="ls-txt" id="lsTxt">جاري التحميل...</div>
+</div>
+<div id="toast" class="toast"><span style="width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0"></span><span id="toastMsg"></span></div>
+<div class="mob-ov" id="mobOv" onclick="closeSb()"></div>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="authModal">
+  <div class="modal-box">
+    <div class="auth-logo">
+      <div class="auth-logo-ic">🌙</div>
+      <div style="font-size:18px;font-weight:800">نـ<em style="color:var(--ac);font-style:normal">ور</em></div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">القرآن الكريم</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" onclick="swAuthTab('login')">تسجيل الدخول</button>
+      <button class="auth-tab" onclick="swAuthTab('register')">حساب جديد</button>
+    </div>
+    <div id="loginForm">
+      <div class="fg"><label>البريد الإلكتروني</label><input class="inp" type="email" id="loginEmail" placeholder="email@example.com" autocomplete="email"></div>
+      <div class="fg"><label>كلمة المرور</label><input class="inp" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn" id="loginBtn" onclick="doLogin()">دخول</button>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="fg"><label>الاسم</label><input class="inp" type="text" id="regName" placeholder="اسمك الكريم"></div>
+      <div class="fg"><label>البريد الإلكتروني</label><input class="inp" type="email" id="regEmail" placeholder="email@example.com" autocomplete="email"></div>
+      <div class="fg"><label>كلمة المرور</label><input class="inp" type="password" id="regPass" placeholder="٦ أحرف على الأقل" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="auth-btn" id="registerBtn" onclick="doRegister()">إنشاء حساب</button>
+    </div>
+    <div class="auth-err" id="authErr"></div>
+    <span class="auth-close" onclick="closeAuth()">إغلاق ✕</span>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="adm-login-modal" id="admLoginModal">
+  <div class="adm-login-box">
+    <div style="font-size:26px;margin-bottom:9px">🔐</div>
+    <div style="font-size:15px;font-weight:800;margin-bottom:3px">لوحة التحكم</div>
+    <div style="font-size:10px;color:var(--t3);margin-bottom:17px" id="admLoginSubtitle">للمديرين فقط</div>
+    <input class="ainp" type="text" id="admUser" placeholder="اسم المستخدم" autocomplete="off" style="margin-bottom:8px">
+    <input class="ainp" type="password" id="admPass" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')admDoLogin()" style="margin-bottom:10px">
+    <button class="adm-btn adm-btn-p" style="width:100%;padding:10px;justify-content:center" onclick="admDoLogin()">دخول</button>
+    <div style="font-size:11px;color:var(--red);margin-top:7px;min-height:16px;text-align:center" id="admErr"></div>
+    <span style="display:block;text-align:center;font-size:10px;color:var(--t3);cursor:pointer;margin-top:9px" onclick="closeAdmLogin()">إلغاء</span>
+    <div id="admLoginHint" style="font-size:9px;color:var(--t3);margin-top:8px;padding-top:8px;border-top:1px solid var(--bdr);text-align:center"></div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="adm-panel" id="admPanel">
+  <div id="admNotif" class="adm-notif"><span style="width:6px;height:6px;border-radius:50%;background:#6c5ce7;flex-shrink:0" id="admNotifDot"></span><span id="admNotifMsg"></span></div>
+  <div class="adm-tb">
+    <div class="adm-tb-title">⚙ لوحة التحكم</div>
+    <div class="adm-tabs">
+      <button class="adm-tab on" onclick="admNav('dashboard',this)">الرئيسية</button>
+      <button class="adm-tab" onclick="admNav('reciters',this)">القراء</button>
+      <button class="adm-tab" onclick="admNav('surahs',this)">السور</button>
+      <button class="adm-tab" onclick="admNav('videos',this)">فيديوهات</button>
+      <button class="adm-tab" onclick="admNav('users',this)">المستخدمون</button>
+      <button class="adm-tab" onclick="admNav('db',this)">البيانات</button>
+      <button class="adm-tab" onclick="admNav('appearance',this)">المظهر</button>
+      <button class="adm-tab" onclick="admNav('security',this)">الأمان</button>
+    </div>
+    <button class="adm-btn adm-btn-d" style="margin-right:auto;padding:4px 9px;font-size:10px" onclick="exitAdmin()">✕ خروج</button>
+  </div>
+  <div class="adm-content">
+
+    <!-- DASHBOARD -->
+    <div class="adm-page on" id="admp-dashboard">
+      <div class="adm-stats-grid" id="dashStats"></div>
+      <div class="adm-2col">
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">⚡ إجراءات سريعة</div></div>
+          <div class="adm-section-body" style="display:flex;gap:7px;flex-wrap:wrap">
+            <button class="adm-btn adm-btn-p" onclick="admNav('reciters',null)">➕ قارئ</button>
+            <button class="adm-btn adm-btn-s" onclick="admNav('videos',null)">🎬 فيديو</button>
+            <button class="adm-btn adm-btn-s" onclick="admNav('users',null)">👥 مستخدمون</button>
+            <button class="adm-btn adm-btn-g" onclick="admNav('db',null)">🗄️ البيانات</button>
+            <button class="adm-btn adm-btn-s" onclick="admNav('appearance',null)">🎨 مظهر</button>
+          </div>
+        </div>
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">📡 Supabase</div></div>
+          <div class="adm-section-body" id="dbStatusArea"></div>
+        </div>
+        <div class="adm-section" style="grid-column:1/-1">
+          <div class="adm-section-hd"><div class="adm-section-title">🔊 مصادر الصوت (MP3Quran API)</div></div>
+          <div class="adm-section-body" id="audioSrcStatus"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECITERS -->
+    <div class="adm-page" id="admp-reciters">
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">🎤 القراء من MP3Quran API (<span id="mp3RecCount">0</span>)</div>
+          <button class="adm-btn adm-btn-g" style="padding:4px 9px;font-size:10px" onclick="loadMP3QuranReciters()">🔄 تحميل من API</button>
+        </div>
+        <div class="adm-section-body">
+          <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.8">
+            القراء بيتحملوا تلقائياً من <strong style="color:#a29bfe">mp3quran.net/api/v3/reciters?language=ar</strong>
+            — كل قارئ عنده رابط server المباشر للملفات الصوتية.
+          </div>
+          <div class="adm-acts" style="margin-bottom:12px">
+            <button class="adm-btn adm-btn-p" onclick="loadMP3QuranReciters()">📡 تحميل كل القراء</button>
+            <button class="adm-btn adm-btn-s" onclick="testAudio()">🔊 اختبار الصوت</button>
+          </div>
+          <div class="api-res" id="mp3-test-res"></div>
+        </div>
+        <div style="overflow-x:auto;max-height:400px;overflow-y:auto">
+          <table class="adm-tbl"><thead><tr><th>القارئ</th><th>الرواية</th><th>السور</th><th>Server</th><th>اختيار</th></tr></thead>
+          <tbody id="mp3RecTBody"></tbody></table>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">➕ إضافة قارئ يدوياً</div></div>
+        <div class="adm-section-body">
+          <div class="adm-form-grid">
+            <div class="afg"><label>الاسم بالعربي *</label><input class="ainp" id="nr-name" placeholder="اسم القارئ"></div>
+            <div class="afg"><label>الاسم بالإنجليزي</label><input class="ainp" id="nr-en" placeholder="English name"></div>
+            <div class="afg full"><label>رابط Server مباشر * (من mp3quran.net)</label><input class="ainp" id="nr-server" placeholder="https://server8.mp3quran.net/afs/" dir="ltr"></div>
+            <div class="afg"><label>الأسلوب</label><select class="ainp" id="nr-style"><option>مرتّل</option><option>مجوّد</option></select></div>
+            <div class="afg"><label>الدولة</label><input class="ainp" id="nr-country" placeholder="🇸🇦" style="font-size:16px"></div>
+            <div class="afg"><label>حرف الأيقونة</label><input class="ainp" id="nr-icon" placeholder="م" maxlength="2"></div>
+          </div>
+          <div class="afg" style="margin-bottom:10px"><label>اللون</label><div class="color-row" id="nr-colors"></div><input class="ainp" id="nr-color" value="#7c6af7" dir="ltr" style="margin-top:6px;max-width:120px"></div>
+          <button class="adm-btn adm-btn-p" onclick="addManualReciter()">➕ إضافة</button>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">📋 القراء الحاليون (<span id="recCount">0</span>)</div></div>
+        <div style="overflow-x:auto"><table class="adm-tbl"><thead><tr><th>القارئ</th><th>Server</th><th>الأسلوب</th><th>إجراءات</th></tr></thead><tbody id="recTBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- SURAHS -->
+    <div class="adm-page" id="admp-surahs">
+      <div class="adm-section">
+        <div class="adm-section-hd">
+          <div class="adm-section-title">📖 السور (<span id="surCount">0</span>)</div>
+          <button class="adm-btn adm-btn-s" style="padding:4px 9px;font-size:10px" onclick="reloadSurahs()">🔄 تحديث</button>
+        </div>
+        <div class="adm-section-body">
+          <input class="ainp" placeholder="🔍 ابحث..." oninput="filterSurTbl(this.value)" style="margin-bottom:10px;width:100%">
+          <div style="max-height:340px;overflow-y:auto">
+            <table class="adm-tbl"><thead><tr><th>#</th><th>السورة</th><th>النوع</th><th>الآيات</th></tr></thead><tbody id="surTBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="adm-page" id="admp-videos">
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">🎬 إضافة فيديو يوتيوب</div></div>
+        <div class="adm-section-body">
+          <div style="font-size:11px;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:7px;padding:9px 12px;margin-bottom:12px;line-height:1.7">
+            ⚠️ <strong>تنبيه مهم:</strong> بعض فيديوهات يوتيوب مش بتسمح بالـ Embed (الخطأ 150/153).<br>
+            قبل إضافة فيديو، تأكد إن الفيديو بيشتغل في Embed:<br>
+            يوتيوب → Share → Embed → لو ظهر "Embedding disabled" مش هينفع.
+          </div>
+          <div class="adm-form-grid">
+            <div class="afg full"><label>رابط يوتيوب أو Video ID *</label>
+              <input class="ainp" id="vd-url" placeholder="https://youtube.com/watch?v=..." dir="ltr" oninput="previewVd()">
+            </div>
+            <div class="afg"><label>العنوان *</label><input class="ainp" id="vd-title" placeholder="عنوان الفيديو"></div>
+            <div class="afg"><label>اسم القناة</label><input class="ainp" id="vd-channel" placeholder="اسم القناة"></div>
+            <div class="afg"><label>التصنيف</label>
+              <select class="ainp" id="vd-cat">
+                <option>تلاوات قرآنية</option><option>تفسير</option><option>تجويد</option>
+                <option>خطب ومحاضرات</option><option>أذكار ودعاء</option><option>أخرى</option>
+              </select>
+            </div>
+            <div class="afg"><label>المدة</label><input class="ainp" id="vd-dur" placeholder="15:30"></div>
+          </div>
+          <div class="afg" style="margin-bottom:10px"><label>الوصف</label><textarea class="ainp" id="vd-desc"></textarea></div>
+          <div id="vd-preview" style="display:none;margin-bottom:10px">
+            <img id="vd-prev-img" style="width:140px;border-radius:7px;border:1px solid var(--bdr)">
+            <div id="vd-embed-test" style="margin-top:7px"></div>
+          </div>
+          <div class="adm-acts">
+            <button class="adm-btn adm-btn-p" onclick="addVideo()" id="addVidBtn">➕ إضافة للـ Supabase</button>
+            <button class="adm-btn adm-btn-s" onclick="testVidEmbed()">🔍 اختبار الـ Embed</button>
+          </div>
+          <div class="api-res" id="vd-res"></div>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-hd">
+          <div class="adm-section-title">🎬 الفيديوهات (<span id="vidCount">0</span>)</div>
+          <button class="adm-btn adm-btn-s" style="padding:4px 9px;font-size:10px" onclick="refreshVideos()">🔄</button>
+        </div>
+        <div style="overflow-x:auto"><table class="adm-tbl"><thead><tr><th>الفيديو</th><th>التصنيف</th><th>التاريخ</th><th>إجراءات</th></tr></thead><tbody id="vidTBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="adm-page" id="admp-users">
+      <div class="adm-section">
+        <div class="adm-section-hd">
+          <div class="adm-section-title">👥 المستخدمون</div>
+          <button class="adm-btn adm-btn-g" style="padding:4px 9px;font-size:10px" onclick="loadUsersAdmin()">🔄 تحديث</button>
+        </div>
+        <div class="adm-section-body" style="font-size:11px;color:var(--t2);line-height:1.8;margin-bottom:0">
+          اضغط <strong style="color:var(--green)">ترقية</strong> لتعيين مستخدم كـ Admin — سيظهر له زر ⚙ في القائمة الجانبية وصفحة حسابه.
+        </div>
+        <div style="overflow-x:auto"><table class="adm-tbl"><thead><tr><th>المستخدم</th><th>الدور</th><th>الاستماع</th><th>التسجيل</th><th>إجراءات</th></tr></thead><tbody id="usersTBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- DB VIEWER -->
+    <div class="adm-page" id="admp-db">
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">🗄️ عرض بيانات Supabase</div></div>
+        <div class="adm-section-body">
+          <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+            <button class="adm-btn adm-btn-p" onclick="viewTable('videos')">📹 الفيديوهات</button>
+            <button class="adm-btn adm-btn-s" onclick="viewTable('profiles')">👥 المستخدمون</button>
+          </div>
+          <div id="dbViewResult"><div class="empty"><span>🗄️</span>اختر جدول لعرض البيانات</div></div>
+        </div>
+      </div>
+      <div class="adm-section">
+        <div class="adm-section-hd"><div class="adm-section-title">ℹ️ كيفية عرض البيانات في Supabase</div></div>
+        <div class="adm-section-body" style="font-size:12px;color:var(--t2);line-height:2">
+          <strong style="color:var(--t)">١. Table Editor:</strong> القائمة الجانبية → <code style="background:#151525;padding:1px 6px;border-radius:4px;color:#a29bfe">Table Editor</code> → اختر الجدول<br>
+          <strong style="color:var(--t)">٢. SQL Editor:</strong> اكتب <code style="background:#151525;padding:1px 6px;border-radius:4px;color:#a29bfe">SELECT * FROM videos;</code><br>
+          <strong style="color:var(--t)">٣. Authentication → Users:</strong> عرض كل المستخدمين<br>
+          <strong style="color:var(--t)">٤. هنا:</strong> اضغط الأزرار أعلاه لعرض البيانات مباشرةً
+        </div>
+      </div>
+    </div>
+
+    <!-- APPEARANCE -->
+    <div class="adm-page" id="admp-appearance">
+      <div class="adm-2col">
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">🎨 اللون الرئيسي</div></div>
+          <div class="adm-section-body">
+            <div class="color-row" id="theme-colors"></div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+              <input type="color" class="ainp" id="customColor" value="#7c6af7" oninput="applyTheme(this.value)" style="height:38px;padding:3px;cursor:pointer;width:50px">
+              <button class="adm-btn adm-btn-p" onclick="saveTheme()">💾 حفظ</button>
+            </div>
+          </div>
+        </div>
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">📝 المنصة</div></div>
+          <div class="adm-section-body">
+            <div class="afg" style="margin-bottom:9px"><label>اسم المنصة</label><input class="ainp" id="site-name" value="نور"></div>
+            <div class="afg" style="margin-bottom:10px"><label>الوصف</label><input class="ainp" id="site-sub" value="القرآن الكريم"></div>
+            <button class="adm-btn adm-btn-p" onclick="saveAppearance()">💾 حفظ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="adm-page" id="admp-security">
+      <div class="adm-2col">
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">🔐 كلمة مرور لوحة التحكم</div></div>
+          <div class="adm-section-body">
+            <div class="afg" style="margin-bottom:8px"><label>الحالية</label><input class="ainp" type="password" id="cur-p"></div>
+            <div class="afg" style="margin-bottom:8px"><label>الجديدة</label><input class="ainp" type="password" id="new-p"></div>
+            <div class="afg" style="margin-bottom:10px"><label>تأكيد</label><input class="ainp" type="password" id="conf-p"></div>
+            <div style="font-size:10px;color:var(--t3);margin-bottom:9px">افتراضي: admin / noor2024</div>
+            <button class="adm-btn adm-btn-p" onclick="changePass()">تغيير</button>
+          </div>
+        </div>
+        <div class="adm-section">
+          <div class="adm-section-hd"><div class="adm-section-title">🗄️ Supabase</div></div>
+          <div class="adm-section-body">
+            <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px;margin-bottom:8px"><span style="width:8px;height:8px;border-radius:50%;background:var(--green)"></span>متصل ✓</div>
+            <div style="font-size:11px;color:var(--t2);line-height:1.9">📍 tecmdbntjvtdkwbzfhjp<br>✅ المستخدمون محفوظون في السحابة</div>
+            <button class="adm-btn adm-btn-g" style="margin-top:10px" onclick="testSbConn()">🔍 اختبار الاتصال</button>
+            <div class="api-res" id="sb-test-res"></div>
+          </div>
+        </div>
+      </div>
+      <!-- SQL Fix Section -->
+      <div class="adm-section" style="margin-top:14px">
+        <div class="adm-section-hd" style="background:rgba(231,76,60,.06)">
+          <div class="adm-section-title" style="color:var(--red)">🔧 إصلاح صلاحيات Supabase (RLS)</div>
+          <button class="adm-btn adm-btn-p" style="padding:4px 10px;font-size:10px" onclick="copySqlFix()">📋 نسخ</button>
+        </div>
+        <div class="adm-section-body">
+          <div style="font-size:11px;color:var(--t2);line-height:1.8;margin-bottom:10px">
+            لو مش بتقدر تضيف/تحذف فيديوهات أو مش بتشوف المستخدمين،<br>
+            روح <strong style="color:var(--t)">Supabase → SQL Editor</strong> وشغّل الكود ده:
+          </div>
+          <pre id="sqlFixCode" style="background:#111;border-radius:8px;padding:12px;font-family:monospace;font-size:10px;color:#a29bfe;border:1px solid rgba(108,92,231,.2);overflow-x:auto;white-space:pre;direction:ltr;line-height:1.8">-- إصلاح صلاحيات جدول الفيديوهات
+DROP POLICY IF EXISTS "insert videos" ON public.videos;
+DROP POLICY IF EXISTS "delete videos" ON public.videos;
+DROP POLICY IF EXISTS "update videos" ON public.videos;
+DROP POLICY IF EXISTS "anyone can view videos" ON public.videos;
+DROP POLICY IF EXISTS "public videos" ON public.videos;
+
+CREATE POLICY "videos_select" ON public.videos FOR SELECT USING (true);
+CREATE POLICY "videos_insert" ON public.videos FOR INSERT WITH CHECK (true);
+CREATE POLICY "videos_delete" ON public.videos FOR DELETE USING (true);
+CREATE POLICY "videos_update" ON public.videos FOR UPDATE USING (true);
+
+-- إصلاح صلاحيات جدول المستخدمين
+DROP POLICY IF EXISTS "users can view own profile" ON public.profiles;
+DROP POLICY IF EXISTS "admins can view all profiles" ON public.profiles;
+
+CREATE POLICY "profiles_select" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "profiles_insert" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "profiles_update" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() = id);</pre>
+          <button class="adm-btn adm-btn-p" style="margin-top:9px;width:100%;justify-content:center" onclick="copySqlFix()">📋 نسخ الكود</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ MAIN APP ════════════ -->
+<div class="app" id="app" style="display:none">
+  <aside class="sb" id="sbEl">
+    <div class="sb-top">
+      <div class="sb-logo" id="sbLogo">نـ<em>ور</em></div>
+      <div class="sb-sub" id="sbSub">القرآن الكريم</div>
+    </div>
+    <div class="sb-nav">
+      <div class="ni on" data-p="home"     onclick="go('home',this)"><span class="ni-ic">⊞</span>الرئيسية</div>
+      <div class="ni" data-p="surahs"      onclick="go('surahs',this)"><span class="ni-ic">◫</span>السور</div>
+      <div class="ni" data-p="reciters"    onclick="go('reciters',this)"><span class="ni-ic">⊙</span>القراء</div>
+      <div class="ni" data-p="player"      onclick="go('player',this)"><span class="ni-ic">▶</span>المشغل</div>
+      <div class="ni" data-p="videos"      onclick="go('videos',this)"><span class="ni-ic">📺</span>فيديوهات</div>
+      <div class="ni" data-p="search"      onclick="go('search',this)"><span class="ni-ic">◎</span>البحث</div>
+      <div class="ni" data-p="bookmarks"   onclick="go('bookmarks',this)"><span class="ni-ic">◈</span>المحفوظات<span id="bmSbBadge" class="ni-badge" style="display:none"></span></div>
+      <div class="ni" data-p="profile"     onclick="go('profile',this)"><span class="ni-ic">◉</span>حسابي</div>
+    </div>
+    <div class="sb-sep"></div>
+    <div class="sb-lbl">القراء</div>
+    <div class="sb-rec-list" id="sbRec"></div>
+    <div class="sb-user" id="sbUser" onclick="openAuthOrProfile()">
+      <div class="u-av" id="uAv">م</div>
+      <div style="flex:1;min-width:0">
+        <div class="u-nm" id="uNm">تسجيل الدخول</div>
+        <div class="u-tag" id="uTag">اضغط للدخول</div>
+      </div>
+      <span style="font-size:11px;color:var(--t3);flex-shrink:0" title="لوحة التحكم في حسابي">⚙</span>
+    </div>
+  </aside>
+
+  <div class="main" id="mainEl">
+    <div class="topbar">
+      <button class="mob-btn" onclick="openSb()">☰</button>
+      <div class="srch">
+        <span style="color:var(--t3);font-size:13px">🔍</span>
+        <input type="text" placeholder="ابحث في القرآن..." oninput="liveSearch(this.value)" onfocus="go('search',null)">
+      </div>
+      <div class="top-links">
+        <span class="tl on" onclick="go('reciters',null);tlA(this)">القراء</span>
+        <span class="tl" onclick="go('surahs',null);tlA(this)">السور</span>
+        <span class="tl" onclick="go('videos',null);tlA(this)">فيديوهات</span>
+      </div>
+      <div style="display:flex;gap:7px;margin-right:auto">
+        <div class="icon-btn" id="topUserBtn" onclick="openAuthOrProfile()">👤</div>
+        <div class="icon-btn" onclick="go('bookmarks',null)">🔖</div>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="page on" id="pg-home">
+      <div class="hero">
+        <div class="h-layer" style="background:linear-gradient(135deg,#0d0d28,#0c0c0f)">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(124,106,247,.13),transparent 65%)"></div>
+          <div style="position:absolute;top:22px;left:30px;font-family:'Amiri Quran';font-size:145px;color:rgba(124,106,247,.04);line-height:1;pointer-events:none">ق</div>
+        </div>
+        <div class="h-grad"></div>
+        <div class="h-body">
+          <div class="badge">✦ القرآن الكريم</div>
+          <div class="h-title" id="heroTitle">سورة الفاتحة</div>
+          <div class="h-desc">أم الكتاب — تُقرأ في كل ركعة من الصلاة</div>
+          <div class="acts">
+            <button class="btn-p" onclick="openPlayerPage(1)">▶ استمع للسورة</button>
+            <button class="btn-g" onclick="openSurah(1)">عرض الآيات</button>
+          </div>
+        </div>
+      </div>
+      <div class="pad">
+        <div class="sec-hd mb22"><div class="sec-t">أبرز القراء</div><div class="sec-lk" onclick="go('reciters',null)">عرض الكل</div></div>
+        <div class="rec-hero-grid" id="homeRecHero"></div>
+        <div class="sec-hd"><div class="sec-t">السور المميزة</div><div class="sec-lk" onclick="go('surahs',null)">عرض الكل</div></div>
+        <div class="sur-grid" id="homeSurahs"></div>
+        <div class="sec-hd" style="margin-top:22px"><div class="sec-t">🎬 فيديوهات قرآنية</div><div class="sec-lk" onclick="go('videos',null)">عرض الكل</div></div>
+        <div class="vid-grid" id="homeVids"></div>
+      </div>
+    </div>
+
+    <!-- SURAHS -->
+    <div class="page" id="pg-surahs">
+      <div class="pad">
+        <div style="margin-bottom:15px"><div style="font-size:22px;font-weight:800;margin-bottom:4px">السور الكريمة</div><div style="font-size:11px;color:var(--t3)">١١٤ سورة • ٦٢٣٦ آية</div></div>
+        <div style="display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap" id="surFilters">
+          <button class="ay-btn on" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterS('all',this)">الكل</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterS('mak',this)">مكية</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterS('mad',this)">مدنية</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterS('juz30',this)">الجزء ٣٠</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterS('short',this)">قصيرة</button>
+        </div>
+        <div class="sur-grid" id="allSurahsGrid"></div>
+      </div>
+    </div>
+
+    <!-- RECITERS -->
+    <div class="page" id="pg-reciters">
+      <div class="hero" style="min-height:175px">
+        <div class="h-layer" style="background:linear-gradient(135deg,#0a0a1e,#0c0c0f)"></div>
+        <div class="h-grad"></div>
+        <div class="h-body"><div class="badge">✦ القراء</div><div class="h-title">اختر قارئك</div></div>
+      </div>
+      <div class="pad">
+        <div class="sec-hd mb22">
+          <div class="sec-t">جميع القراء</div>
+          <div style="font-size:11px;color:var(--ac)" id="curRecLabel"></div>
+        </div>
+        <div class="rec-grid" id="allRecGrid"></div>
+      </div>
+    </div>
+
+    <!-- RECITER PAGE -->
+    <div class="page" id="pg-reciter">
+      <div class="rph"><div class="rph-bg" id="rphBg"></div><div class="rph-ov"></div>
+        <div class="rph-body"><div class="rph-av" id="rphAv"></div><div class="rph-name" id="rphName"></div><div class="rph-meta" id="rphMeta"></div><div class="acts" id="rphActs"></div></div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:14px 18px 26px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px;margin-bottom:18px" id="recStats"></div>
+        <div class="sec-hd mb22"><div class="sec-t">ألبومات التلاوة</div></div>
+        <div class="alb-grid" id="recAlbums"></div>
+        <div class="sec-hd mb22"><div class="sec-t">أبرز السور</div></div>
+        <div class="sur-grid" id="recSurahs"></div>
+      </div>
+    </div>
+
+    <!-- PLAYER PAGE -->
+    <div class="page" id="pg-player" style="flex-direction:column;overflow:hidden">
+      <div class="player-page-layout" style="flex:1;overflow:hidden">
+        <!-- Player Main -->
+        <div class="player-page-main">
+          <div class="player-hero" id="playerHero">
+            <div class="ph-bg" id="phBg"></div>
+            <div class="ph-ov"></div>
+            <div class="ph-content">
+              <div class="ph-badge">
+                <span style="font-size:12px">🎙</span>
+                <span id="phRecName">اختر قارئاً</span>
+                <span style="opacity:.4">•</span>
+                <span id="phRecStyle" style="font-size:10px;opacity:.6"></span>
+              </div>
+              <div class="ph-title" id="phSurahName">السور الكريمة</div>
+              <div class="ph-sub" id="phSurahMeta">اضغط على أي سورة للاستماع</div>
+            </div>
+          </div>
+          <!-- Audio Card -->
+          <div class="audio-card">
+            <div class="aud-info">
+              <div class="aud-cover" id="audCover">ن</div>
+              <div>
+                <div class="aud-title" id="audTitle">اختر سورة</div>
+                <div class="aud-rec" id="audRec">—</div>
+                <span class="aud-src-badge aud-src-loading" id="audSrcBadge">جاهز للتشغيل</span>
+              </div>
+            </div>
+            <div class="aud-prog-row">
+              <span class="aud-tm" id="audCurTm">0:00</span>
+              <div class="aud-prog" id="audProgEl" onclick="audioSeek(event)">
+                <div class="aud-prog-f" id="audProgF" style="width:0%"></div>
+                <div class="aud-prog-th" id="audProgTh" style="right:0%"></div>
+              </div>
+              <span class="aud-tm r" id="audTotTm">0:00</span>
+            </div>
+            <div class="aud-ctrl">
+              <button class="aud-cb" id="audShufBtn" onclick="toggleShuffle()" title="عشوائي">⇄</button>
+              <button class="aud-cb" onclick="prevSurah()">⏮</button>
+              <button class="aud-pb" id="audPlayBtn" onclick="toggleAudio()" disabled>▶</button>
+              <button class="aud-cb" onclick="nextSurah()">⏭</button>
+              <button class="aud-cb" id="audRepBtn" onclick="cycleRepeat()">↺</button>
+            </div>
+            <div class="aud-bottom">
+              <div class="aud-vol">
+                <span class="aud-vol-ic" onclick="toggleMuteAudio()">🔊</span>
+                <input type="range" class="aud-vol-sl" id="audVolEl" min="0" max="1" step="0.01" value="0.9" oninput="fullAudio.volume=+this.value;syncVol(this.value)">
+              </div>
+              <div class="aud-extra">
+                <button class="aud-ex-btn" onclick="curSurahNum&&openSurah(curSurahNum)">📖 الآيات</button>
+                <button class="aud-ex-btn" id="audBmBtn" onclick="bmCurSurah()">🔖 حفظ</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Surah Sidebar -->
+        <div class="player-page-sidebar">
+          <div class="pps-title">📋 السور — اضغط للتشغيل</div>
+          <div id="ppsSurahList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SURAH VIEW -->
+    <div class="page" id="pg-surah" style="flex-direction:column">
+      <div class="sur-hdr"><div class="sh-bg"></div><div class="sh-ov"></div>
+        <div class="sh-body"><div class="sh-ar" id="shAr"></div><div class="sh-en" id="shEn"></div><div class="sh-pills" id="shPills"></div></div>
+      </div>
+      <div class="bismi" id="bismiEl">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>
+      <div class="sur-tb">
+        <button class="btn-p" style="padding:7px 14px;font-size:11px" onclick="openPlayerPage(curSurahNum)">▶ تشغيل السورة</button>
+        <button class="btn-g" style="font-size:11px;padding:6px 12px" onclick="notify('تم النسخ 🔗')">🔗 مشاركة</button>
+        <div style="font-size:10px;color:var(--t3);margin-right:auto" id="shRecLabel"></div>
+      </div>
+      <div class="sur-ayahs"><div id="ayahList"></div></div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="page" id="pg-videos">
+      <div class="pad">
+        <div style="margin-bottom:15px"><div style="font-size:22px;font-weight:800;margin-bottom:4px">🎬 فيديوهات قرآنية</div><div style="font-size:11px;color:var(--t3)" id="vidSubtitle">من يوتيوب</div></div>
+        <div style="display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap" id="vidFilters">
+          <button class="ay-btn on" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterVids('all',this)">الكل</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterVids('تلاوات قرآنية',this)">تلاوات</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterVids('تفسير',this)">تفسير</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterVids('تجويد',this)">تجويد</button>
+          <button class="ay-btn" style="border-radius:14px;padding:5px 12px;font-size:11px" onclick="filterVids('خطب ومحاضرات',this)">خطب</button>
+        </div>
+        <div class="vid-grid" id="allVidsGrid"></div>
+      </div>
+    </div>
+
+    <!-- VIDEO WATCH PAGE -->
+    <div class="page" id="pg-video" style="flex-direction:column">
+      <div class="vid-layout">
+        <div>
+          <div class="vid-player-wrap">
+            <!-- Embed wrapper: shows iframe OR fallback -->
+            <div id="vidEmbedArea">
+              <div class="vid-iframe-wrap" id="vidIframeWrap">
+                <iframe id="vidIframe" allowfullscreen allow="autoplay;encrypted-media;picture-in-picture"
+                  onload="checkIframeLoad(this)" onerror="showVidFallback()"></iframe>
+              </div>
+              <!-- Fallback shown when embed fails (error 150/153) -->
+              <div id="vidFallback" style="display:none;aspect-ratio:16/9;background:linear-gradient(135deg,#0d0d28,#0c0c0f);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+                <div style="font-size:48px">🎬</div>
+                <div style="font-size:14px;font-weight:700;text-align:center;padding:0 20px" id="vidFallbackTitle"></div>
+                <div style="font-size:12px;color:var(--t3);text-align:center;padding:0 20px">هذا الفيديو لا يدعم التشغيل المدمج (خطأ 150/153)<br>يمكنك مشاهدته مباشرةً على يوتيوب</div>
+                <a id="vidFallbackLink" href="#" target="_blank" class="vid-open-yt">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><path d="M9.6 15.6V8.4l6.3 3.6-6.3 3.6z" fill="#ff0000"/></svg>
+                  فتح في يوتيوب
+                </a>
+              </div>
+            </div>
+            <div class="vid-details">
+              <div class="vid-page-title" id="vidPageTitle"></div>
+              <div class="vid-page-meta" id="vidPageMeta"></div>
+              <!-- Always show YouTube link -->
+              <div style="margin-top:8px">
+                <a id="vidYtLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);transition:color .15s;text-decoration:none" onmouseover="this.style.color='var(--ac)'" onmouseout="this.style.color='var(--t3)'">
+                  ↗ فتح في يوتيوب
+                </a>
+              </div>
+              <div class="vid-page-desc" id="vidPageDesc" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:11px">فيديوهات أخرى</div>
+          <div class="vid-side-list" id="vidSideList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="page" id="pg-search">
+      <div class="pad">
+        <div style="font-size:20px;font-weight:800;margin-bottom:13px">ابحث</div>
+        <div class="srch" style="max-width:100%;padding:10px 14px;border-radius:10px;margin-bottom:18px">
+          <span style="color:var(--t3);font-size:13px">🔍</span>
+          <input type="text" id="mainSrch" placeholder="سورة، قارئ، فيديو..." oninput="doSearch(this.value)" style="font-size:13px">
+        </div>
+        <div id="searchContent">
+          <div class="sec-hd mb22"><div class="sec-t">التصنيفات</div></div>
+          <div class="genre-grid" id="genreGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKMARKS -->
+    <div class="page" id="pg-bookmarks">
+      <div class="pad">
+        <div style="font-size:20px;font-weight:800;margin-bottom:4px">المحفوظات</div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:16px" id="bmCountLbl">٠ عنصر</div>
+        <div id="bmListEl"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="pg-profile">
+      <div class="pad">
+        <div style="font-size:20px;font-weight:800;margin-bottom:16px">حسابي</div>
+        <div id="profileContent"></div>
+      </div>
+    </div>
+    <div class="page" id="pg-profile">
+      <div class="pad">
+        <div style="font-size:20px;font-weight:800;margin-bottom:16px">حسابي</div>
+        <div id="profileContent"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- MINI PLAYER -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="mp-left" onclick="go('player',null)">
+      <div class="mp-thumb" id="mpThumb">ن</div>
+      <div class="mp-info">
+        <div class="mp-title" id="mpTitle">اختر سورة للاستماع</div>
+        <div class="mp-reciter" id="mpRec">—</div>
+      </div>
+    </div>
+    <div class="mp-prog-wrap" onclick="go('player',null)">
+      <div class="mp-prog"><div class="mp-prog-f" id="mpProgF" style="width:0%"></div></div>
+    </div>
+    <div class="mp-controls">
+      <button class="mp-cb" onclick="prevSurah()">⏮</button>
+      <button class="mp-pb" id="mpPlayBtn" onclick="toggleAudio()" disabled>▶</button>
+      <button class="mp-cb" onclick="nextSurah()">⏭</button>
+    </div>
+    <div class="mp-right">
+      <div class="vol-row">
+        <span class="vic" onclick="toggleMuteAudio()">🔊</span>
+        <input type="range" class="vs" id="mpVolEl" min="0" max="1" step="0.01" value="0.9" oninput="fullAudio.volume=+this.value;document.getElementById('audVolEl').value=this.value">
+      </div>
+      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:4px" onclick="go('player',null)" title="فتح المشغل">⬆</button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ════════════════════ SUPABASE ════════════════════ */
+const SB_URL='https://tecmdbntjvtdkwbzfhjp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlY21kYm50anZ0ZGt3YnpmaGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNzE0ODcsImV4cCI6MjA4OTc0NzQ4N30.g-yV7dKVdRKrIE0kkqcjzqnCB1ehjA-K4At9lasPvQY';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+/* ════════════════════ LOCAL STATE ════════════════════ */
+const LS=k=>localStorage.getItem(k);
+const SS=(k,v)=>localStorage.setItem(k,v);
+const SJ=(k,d)=>{try{return JSON.parse(LS(k)||JSON.stringify(d));}catch{return d;}};
+
+let ADM_CREDS=SJ('noor8_adm',{user:'admin',pass:'noor2024'});
+let SETTINGS=SJ('noor8_set',{theme:'#7c6af7',name:'نور',sub:'القرآن الكريم'});
+let BOOKMARKS=SJ('noor8_bm',[]);
+let STATS=SJ('noor8_stats',{ayahs:0,surahs:0});
+// Reset daily (store last reset date)
+
+/* ════════════════════ MP3QURAN DATA ════════════════════ */
+/*
+  MP3Quran API structure:
+  GET https://www.mp3quran.net/api/v3/reciters?language=ar
+  Response: { reciters: [{ id, name, moshaf: [{ server, surah_total, surah_list }] }] }
+  Audio URL: {server}{surahNum_3digits}.mp3
+  Example: https://server8.mp3quran.net/afs/001.mp3
+*/
+
+// Built-in reciters with verified MP3Quran servers
+let REC_DATA=SJ('noor8_rec',[
+  {id:'afs',   name:'مشاري راشد العفاسي',   en:'Mishary Alafasy',          server:'https://server8.mp3quran.net/afs/',                       style:'مرتّل',country:'🇰🇼',icon:'م',color:'#7c6af7',listeners:'٨.٤م',surahs:114,bio:'أشهر قراء العصر الحديث، صوت عذب وأسلوب متميز.'},
+  {id:'basit', name:'عبد الباسط (مرتّل)',    en:'Abdul Basit Murattal',     server:'https://server7.mp3quran.net/basit/',                     style:'مرتّل',country:'🇪🇬',icon:'ع',color:'#c9a84c',listeners:'٦.١م',surahs:114,bio:'أسطورة التلاوة المصرية، صاحب الصوت الذهبي.'},
+  {id:'basit_m',name:'عبد الباسط (مجوّد)',   en:'Abdul Basit Mujawwad',     server:'https://server7.mp3quran.net/basit/Rewayat-AlMujawwad/',  style:'مجوّد',country:'🇪🇬',icon:'ع',color:'#e8c56a',listeners:'٤.٢م',surahs:114,bio:'رواية التجويد الأصيل لعبد الباسط.'},
+  {id:'husary',name:'محمود خليل الحصري',     en:'Mahmoud Hussary',          server:'https://server13.mp3quran.net/husr/',                    style:'مرتّل',country:'🇪🇬',icon:'ح',color:'#1db954',listeners:'٤.٨م',surahs:114,bio:'رائد التسجيل القرآني الحديث.'},
+  {id:'husary_m',name:'الحصري (مجوّد)',      en:'Hussary Mujawwad',         server:'https://server13.mp3quran.net/husr/Rewayat-AlMujawwad/', style:'مجوّد',country:'🇪🇬',icon:'ح',color:'#2ecc71',listeners:'٢.١م',surahs:114,bio:'رواية التجويد للحصري.'},
+  {id:'ayyoub',name:'محمد أيوب',             en:'Muhammad Ayyoub',          server:'https://server10.mp3quran.net/ayyub/',                    style:'مرتّل',country:'🇸🇦',icon:'أ',color:'#e91e8c',listeners:'٣.٢م',surahs:114,bio:'قارئ المسجد النبوي الشريف.'},
+  {id:'basfar',name:'عبد الله بصفر',         en:'Abdullah Basfar',          server:'https://server11.mp3quran.net/bsfr/',                     style:'مرتّل',country:'🇸🇦',icon:'ب',color:'#f39c12',listeners:'٢.٩م',surahs:114,bio:'قارئ سعودي مميز بصوت رصين.'},
+  {id:'muaiqly',name:'ماهر المعيقلي',        en:'Maher Al-Muaiqly',         server:'https://server12.mp3quran.net/maher/',                    style:'مرتّل',country:'🇸🇦',icon:'م',color:'#9c27b0',listeners:'٥.٥م',surahs:114,bio:'إمام المسجد الحرام بمكة المكرمة.'},
+  {id:'sudais', name:'عبد الرحمن السديس',    en:'Abdurrahman As-Sudais',    server:'https://server11.mp3quran.net/sds/',                      style:'مرتّل',country:'🇸🇦',icon:'س',color:'#3f51b5',listeners:'٧.٢م',surahs:114,bio:'رئيس شؤون المسجد الحرام.'},
+  {id:'shuraim',name:'سعود الشريم',          en:'Saud Al-Shuraim',          server:'https://server7.mp3quran.net/shur/',                      style:'مرتّل',country:'🇸🇦',icon:'ش',color:'#ff5722',listeners:'٤.١م',surahs:114,bio:'إمام المسجد الحرام المشارك.'},
+  {id:'minshawi',name:'محمد صديق المنشاوي',  en:'Al-Minshawi',              server:'https://server10.mp3quran.net/minsh/',                    style:'مرتّل',country:'🇪🇬',icon:'م',color:'#00bcd4',listeners:'٢.٧م',surahs:114,bio:'صوت مصري أصيل رحمه الله.'},
+  {id:'jibril', name:'محمد جبريل',           en:'Muhammad Jibril',          server:'https://server8.mp3quran.net/jbrl/',                      style:'مرتّل',country:'🇪🇬',icon:'ج',color:'#e91e63',listeners:'٢.١م',surahs:114,bio:'قارئ مصري متميز بأسلوب رائع.'},
+  {id:'dussary',name:'ياسر الدوسري',         en:'Yasser Al-Dossari',        server:'https://server11.mp3quran.net/yasser/',                   style:'مرتّل',country:'🇸🇦',icon:'ي',color:'#27ae60',listeners:'٣.٨م',surahs:114,bio:'قارئ سعودي ذو صوت مؤثر ورائع.'},
+  {id:'ghamdi', name:'سعد الغامدي',          en:'Saad Al-Ghamdi',           server:'https://server7.mp3quran.net/s_gmd/',                     style:'مرتّل',country:'🇸🇦',icon:'غ',color:'#8e44ad',listeners:'٢.٤م',surahs:114,bio:'صوت مميز بالترتيل والخشوع.'},
+  {id:'ajmy',   name:'أحمد العجمي',          en:'Ahmad Al-Ajmi',            server:'https://server10.mp3quran.net/ajm/',                      style:'مرتّل',country:'🇰🇼',icon:'أ',color:'#2980b9',listeners:'١.٩م',surahs:114,bio:'قارئ كويتي بصوت رقيق وهادئ.'},
+  {id:'luhaidan',name:'صالح اللحيدان',       en:'Salah Al-Luhaidan',        server:'https://server11.mp3quran.net/lhdn/',                     style:'مرتّل',country:'🇸🇦',icon:'ص',color:'#16a085',listeners:'١.٦م',surahs:114,bio:'قارئ سعودي بصوت هادئ ومتأثر.'},
+  {id:'qatami', name:'ناصر القطامي',         en:'Nasser Al-Qatami',         server:'https://server7.mp3quran.net/qtm/',                       style:'مرتّل',country:'🇰🇼',icon:'ن',color:'#d35400',listeners:'٢.٣م',surahs:114,bio:'قارئ كويتي بأسلوب مميز.'},
+  {id:'huzaify',name:'علي الحذيفي',          en:'Ali Al-Huthaifi',          server:'https://server11.mp3quran.net/huzaify/',                  style:'مرتّل',country:'🇸🇦',icon:'ع',color:'#1abc9c',listeners:'١.٨م',surahs:114,bio:'إمام المسجد النبوي الشريف.'},
+  {id:'budayr', name:'علي بن عبدالرحمن البديّر',en:'Ali Al-Budayr',         server:'https://server14.mp3quran.net/bdr/',                      style:'مرتّل',country:'🇸🇦',icon:'ع',color:'#e67e22',listeners:'١.٢م',surahs:114,bio:'قارئ سعودي متميز.'},
+  {id:'menshawi_m',name:'المنشاوي (مجوّد)',   en:'Minshawi Mujawwad',       server:'https://server10.mp3quran.net/minsh/Rewayat-AlMujawwad/', style:'مجوّد',country:'🇪🇬',icon:'م',color:'#3498db',listeners:'١.٤م',surahs:114,bio:'رواية التجويد للمنشاوي.'},
+]);
+
+const ALBUMS_DB={
+  'afs':[{n:'رواية حفص كاملة',em:'🎙',col:'#7c6af7',surahs:'١١٤ سورة',year:'٢٠٠٥'},{n:'ختمة رمضان',em:'🌙',col:'#9c27b0',surahs:'٣٠ جزء',year:'٢٠٢٢'},{n:'الجزء الأخير',em:'📖',col:'#e91e63',surahs:'٣٧ سورة',year:'٢٠١٠'}],
+  default:[{n:'الرواية الكاملة',em:'📖',col:'#7c6af7',surahs:'١١٤ سورة',year:'متاح'},{n:'الجزء الثلاثون',em:'🌙',col:'#c9a84c',surahs:'٣٧ سورة',year:'متاح'},{n:'السور المختارة',em:'✨',col:'#1db954',surahs:'٢٠ سورة',year:'متاح'}],
+};
+const GENRES=[{n:'الجزء الثلاثون',ic:'📖',col:'#7c6af7',bg:'rgba(124,106,247,.12)',f:'juz30'},{n:'قِصار السور',ic:'🌙',col:'#c9a84c',bg:'rgba(201,168,76,.1)',f:'short'},{n:'السبع الطوال',ic:'🏛',col:'#1db954',bg:'rgba(29,185,84,.1)',f:'long'},{n:'سور مكية',ic:'🌅',col:'#e91e8c',bg:'rgba(233,30,140,.1)',f:'mak'},{n:'فيديوهات',ic:'🎬',col:'#f39c12',bg:'rgba(243,156,18,.1)',f:'vid'}];
+const COLORS=['#7c6af7','#c9a84c','#1db954','#e91e8c','#f39c12','#00bcd4','#9c27b0','#3f51b5','#e74c3c','#3498db'];
+
+let SURAHS=[], VIDEOS=[], MP3_RECITERS=[]; // fetched from APIs
+let curRec='afs', curSurahNum=null, curSurahData=null;
+let curUser=null, curUserProfile=null;
+let audioShuffle=false, audioRepeat='none';
+let fullAudioSurahNum=null, fullAudioAttempt=0, fullAudioTimer=null;
+
+/* ── Full Surah Audio using MP3Quran ── */
+const fullAudio=new Audio();
+fullAudio.crossOrigin='anonymous';
+
+function getMP3QuranUrl(surahNum, recId){
+  const rec=REC_DATA.find(r=>r.id===recId);
+  if(!rec||!rec.server) return null;
+  return rec.server+String(surahNum).padStart(3,'0')+'.mp3';
+}
+
+// Fallback URLs using islamic.network
+function getFallbackUrls(surahNum, recId){
+  // Map our IDs to alquran.cloud edition IDs for fallback
+  const edMap={
+    'afs':'ar.alafasy','basit':'ar.abdulbasitmurattal','husary':'ar.husary',
+    'ayyoub':'ar.muhammadayyoub','basfar':'ar.abdullahbasfar','muaiqly':'ar.mahermuaiqly',
+    'sudais':'ar.sudais','minshawi':'ar.minshawi',
+  };
+  const ed=edMap[recId]||'ar.alafasy';
+  return [
+    `https://cdn.islamic.network/quran/audio-surah/128/${ed}/${surahNum}.mp3`,
+  ];
+}
+
+async function loadFullSurah(surahNum){
+  if(!SURAHS.length){notify('جاري تحميل البيانات...');return;}
+  const s=SURAHS.find(x=>x.number===surahNum);
+  if(!s)return;
+  const r=REC_DATA.find(x=>x.id===curRec);
+  if(!r){notify('لم يتم اختيار قارئ');return;}
+
+  fullAudioSurahNum=surahNum;
+  curSurahNum=surahNum;
+  setAudioState('loading');
+  updatePlayerUI(s,r);
+
+  // Collect URLs to try
+  const primaryUrl=getMP3QuranUrl(surahNum,curRec);
+  const fallbacks=getFallbackUrls(surahNum,curRec);
+  const allUrls=[primaryUrl,...fallbacks].filter(Boolean);
+
+  tryAudioUrls(allUrls, 0, s, r);
+}
+
+function tryAudioUrls(urls, idx, s, r){
+  if(idx>=urls.length){
+    setAudioState('error');
+    notify('⚠️ تعذر تحميل الصوت — جرب قارئاً آخر');
+    return;
+  }
+  const url=urls[idx];
+  const srcLabel=idx===0?'MP3Quran ✓':'islamic.network ✓';
+  let handled=false;
+  let timeoutId=null;
+
+  // Clear previous handlers first
+  fullAudio.oncanplay=null;
+  fullAudio.onerror=null;
+  fullAudio.pause();
+
+  function onSuccess(){
+    if(handled)return;
+    handled=true;
+    clearTimeout(timeoutId);
+    fullAudio.oncanplay=null;
+    fullAudio.onerror=null;
+    fullAudio.play().catch(()=>{});
+    setAudioState('playing', srcLabel);
+    startAudioTimer();
+    STATS.surahs=(STATS.surahs||0)+1;
+    saveLocal();
+    if(curUser)syncProfile();
+    document.querySelectorAll('.pps-item').forEach(el=>el.classList.toggle('on',+el.dataset.num===s.number));
+  }
+  function onFail(){
+    if(handled)return;
+    handled=true;
+    clearTimeout(timeoutId);
+    fullAudio.oncanplay=null;
+    fullAudio.onerror=null;
+    tryAudioUrls(urls, idx+1, s, r);
+  }
+
+  fullAudio.oncanplay=onSuccess;
+  fullAudio.onerror=onFail;
+  timeoutId=setTimeout(()=>{ if(!handled&&fullAudio.readyState<2)onFail(); }, 9000);
+
+  fullAudio.src=url;
+  fullAudio.volume=+document.getElementById('audVolEl').value;
+  fullAudio.load();
+}
+
+function setAudioState(state, srcLabel=''){
+  const pb=document.getElementById('audPlayBtn');
+  const mpb=document.getElementById('mpPlayBtn');
+  const badge=document.getElementById('audSrcBadge');
+  if(state==='loading'){
+    if(pb){pb.disabled=true;pb.innerHTML='<div class="spinner"></div>';}
+    if(mpb){mpb.disabled=true;mpb.textContent='⏳';}
+    if(badge){badge.className='aud-src-badge aud-src-loading';badge.textContent='جاري التحميل...';}
+  } else if(state==='playing'){
+    if(pb){pb.disabled=false;pb.textContent='⏸';}
+    if(mpb){mpb.disabled=false;mpb.textContent='⏸';}
+    if(badge){badge.className='aud-src-badge aud-src-ok';badge.textContent='🔊 '+srcLabel;}
+  } else if(state==='paused'){
+    if(pb){pb.disabled=false;pb.textContent='▶';}
+    if(mpb){mpb.disabled=false;mpb.textContent='▶';}
+  } else if(state==='error'){
+    if(pb){pb.disabled=false;pb.textContent='▶';}
+    if(mpb){mpb.disabled=false;mpb.textContent='▶';}
+    if(badge){badge.className='aud-src-badge aud-src-err';badge.textContent='⚠️ تعذر التحميل';}
+  }
+}
+
+function updatePlayerUI(s, r){
+  // Hero
+  const bg=r?`linear-gradient(135deg,${r.color}30,#0d0d28)`:'linear-gradient(135deg,#0d0d28,#0c0c0f)';
+  const phBg=document.getElementById('phBg');if(phBg)phBg.style.background=bg;
+  const phs=document.getElementById('phSurahName');if(phs)phs.textContent=s.name;
+  const phm=document.getElementById('phSurahMeta');if(phm)phm.textContent=`${s.revelationType==='Meccan'?'سورة مكية':'سورة مدنية'} • ${toAr(s.numberOfAyahs)} آية`;
+  const phr=document.getElementById('phRecName');if(phr)phr.textContent=r?r.name:'—';
+  const phrs=document.getElementById('phRecStyle');if(phrs)phrs.textContent=r?r.style:'';
+  // Card
+  const cov=document.getElementById('audCover');if(cov){cov.textContent=s.name[0]||'ن';if(r)cov.style.background=`linear-gradient(135deg,${r.color}25,var(--bg4))`;}
+  const at=document.getElementById('audTitle');if(at)at.textContent=s.name;
+  const ar=document.getElementById('audRec');if(ar)ar.textContent=r?r.name:'—';
+  // Mini player
+  const mt=document.getElementById('mpTitle');if(mt)mt.textContent='سورة '+s.name;
+  const mr=document.getElementById('mpRec');if(mr)mr.textContent=r?r.name:'—';
+  const mth=document.getElementById('mpThumb');if(mth){mth.textContent=s.name[0]||'ن';if(r)mth.style.background=`linear-gradient(135deg,${r.color}30,var(--bg4))`;}
+  document.getElementById('heroTitle').textContent=s.name;
+}
+
+function startAudioTimer(){
+  if(fullAudioTimer)clearInterval(fullAudioTimer);
+  fullAudioTimer=setInterval(()=>{
+    if(!fullAudio.duration)return;
+    const p=(fullAudio.currentTime/fullAudio.duration)*100;
+    const af=document.getElementById('audProgF');const at=document.getElementById('audProgTh');
+    const mf=document.getElementById('mpProgF');
+    if(af)af.style.width=p+'%';if(at)at.style.right=(100-p)+'%';if(mf)mf.style.width=p+'%';
+    const ct=document.getElementById('audCurTm');const tt=document.getElementById('audTotTm');
+    if(ct)ct.textContent=fmtT(fullAudio.currentTime);if(tt)tt.textContent=fmtT(fullAudio.duration);
+  },500);
+}
+
+fullAudio.onended=()=>{
+  if(audioRepeat==='surah'){loadFullSurah(fullAudioSurahNum);return;}
+  nextSurah();
+};
+
+function toggleAudio(){
+  if(!fullAudio.src||!fullAudioSurahNum){go('player',null);return;}
+  if(fullAudio.paused){fullAudio.play();setAudioState('playing',document.getElementById('audSrcBadge').textContent.replace('🔊 ',''));}
+  else{fullAudio.pause();setAudioState('paused');}
+}
+function toggleMuteAudio(){const s=document.getElementById('audVolEl');if(fullAudio.volume>0){fullAudio._v=fullAudio.volume;fullAudio.volume=0;s.value=0;syncVol(0);}else{fullAudio.volume=fullAudio._v||.9;s.value=fullAudio.volume;syncVol(fullAudio.volume);}}
+function syncVol(v){document.getElementById('mpVolEl').value=v;}
+function audioSeek(e){if(!fullAudio.duration)return;const r=document.getElementById('audProgEl').getBoundingClientRect();fullAudio.currentTime=(1-(e.clientX-r.left)/r.width)*fullAudio.duration;}
+function nextSurah(){if(!SURAHS.length)return;const idx=SURAHS.findIndex(s=>s.number===(fullAudioSurahNum||curSurahNum));const ni=audioShuffle?Math.floor(Math.random()*SURAHS.length):(idx+1)%SURAHS.length;loadFullSurah(SURAHS[ni].number);}
+function prevSurah(){if(!SURAHS.length)return;const idx=SURAHS.findIndex(s=>s.number===(fullAudioSurahNum||curSurahNum));const pi=(idx-1+SURAHS.length)%SURAHS.length;loadFullSurah(SURAHS[pi].number);}
+function toggleShuffle(){audioShuffle=!audioShuffle;document.getElementById('audShufBtn').classList.toggle('on',audioShuffle);notify(audioShuffle?'تشغيل عشوائي':'بالترتيب');}
+function cycleRepeat(){const m=['none','surah'];const i=m.indexOf(audioRepeat);audioRepeat=m[(i+1)%m.length];const b=document.getElementById('audRepBtn');b.classList.toggle('on',audioRepeat!=='none');b.textContent={none:'↺',surah:'↺∞'}[audioRepeat];notify({none:'بدون تكرار',surah:'تكرار السورة'}[audioRepeat]);}
+
+/* ════════════════════ PLAYER PAGE ════════════════════ */
+function openPlayerPage(surahNum){
+  go('player',null);
+  renderPpsSidebar();
+  if(surahNum) loadFullSurah(surahNum);
+}
+
+function renderPpsSidebar(){
+  const el=document.getElementById('ppsSurahList');
+  if(!el||!SURAHS.length) return;
+  el.innerHTML=SURAHS.map(s=>`
+    <div class="pps-item ${fullAudioSurahNum===s.number?'on':''}" data-num="${s.number}"
+      onclick="loadFullSurahFromSidebar(${s.number})">
+      <div class="pps-num">${toAr(s.number)}</div>
+      <div class="pps-name">${s.name}</div>
+      <div class="pps-ayahs">${toAr(s.numberOfAyahs)}</div>
+    </div>`).join('');
+}
+
+// Called from sidebar — loads surah and makes sure player page is visible
+function loadFullSurahFromSidebar(num){
+  // Make sure we're on player page
+  if(!document.getElementById('pg-player').classList.contains('on')){
+    go('player',null);
+  }
+  loadFullSurah(num);
+}
+
+/* ════════════════════ UTILS ════════════════════ */
+const toAr=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const fmtT=s=>{s=isNaN(s)||s<0?0:s;return Math.floor(s/60)+':'+(Math.floor(s%60)<10?'0':'')+Math.floor(s%60);};
+const applyTheme=c=>{document.documentElement.style.setProperty('--ac',c);document.documentElement.style.setProperty('--ac2',c+'cc');};
+let toastT;const notify=m=>{document.getElementById('toastMsg').textContent=m;const t=document.getElementById('toast');t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2500);};
+const saveLocal=()=>{SS('noor8_bm',JSON.stringify(BOOKMARKS));SS('noor8_stats',JSON.stringify(STATS));SS('noor8_rec',JSON.stringify(REC_DATA));};
+
+const openSb=()=>{document.getElementById('sbEl').classList.add('open');document.getElementById('mobOv').style.display='block';};
+const closeSb=()=>{document.getElementById('sbEl').classList.remove('open');document.getElementById('mobOv').style.display='none';};
+
+/* ════════════════════ NAV ════════════════════ */
+function go(pg,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const t=document.getElementById('pg-'+pg);if(!t)return;
+  t.classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');
+  else document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.dataset.p===pg));
+  renderPage(pg);
+  document.getElementById('mainEl').scrollTo({top:0,behavior:'smooth'});
+  closeSb();
+}
+const tlA=el=>{document.querySelectorAll('.tl').forEach(t=>t.classList.remove('on'));el.classList.add('on');};
+
+/* ════════════════════ INIT ════════════════════ */
+async function init(){
+  document.getElementById('lsTxt').textContent='جاري التحميل...';
+  applyTheme(SETTINGS.theme);
+
+  // Auth session
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){curUser=session.user;await loadProfile();}
+  sb.auth.onAuthStateChange(async(e,s)=>{
+    if(s){curUser=s.user;await loadProfile();}
+    else{curUser=null;curUserProfile=null;}
+    updateUserUI();
+    if(document.getElementById('pg-profile')?.classList.contains('on'))renderProfile();
+  });
+
+  // Surahs from alquran.cloud
+  document.getElementById('lsTxt').textContent='جاري تحميل السور...';
+  try{const r=await fetch('https://api.alquran.cloud/v1/surah');const d=await r.json();if(d.code===200)SURAHS=d.data;else SURAHS=FALLBACK;}
+  catch{SURAHS=FALLBACK;}
+
+  // Auto-load reciters from MP3Quran API
+  fetchMP3QuranReciters();
+
+  // Videos from Supabase
+  await loadVideos();
+
+  setTimeout(()=>{
+    document.getElementById('ls').style.display='none';
+    document.getElementById('app').style.display='grid';
+    renderSbRec();renderHome();renderAllSurahs();renderAllRec();renderGenres();renderStats();renderBm();
+    updateUserUI();
+    buildColorRow('nr-colors','nr-color');buildColorRow('theme-colors','customColor');
+  },2800);
+}
+
+/* ════════════════════ SUPABASE ════════════════════ */
+async function loadProfile(){
+  if(!curUser)return;
+  try{
+    const {data,error}=await sb.from('profiles').select('*').eq('id',curUser.id).single();
+    if(error){
+      const email=curUser.email||'';
+      const name=email.split('@')[0]||'مستخدم';
+      await sb.from('profiles').upsert({
+        id:curUser.id, name, avatar_url:name[0]?.toUpperCase()||'م',
+        role:'user', listened_ayahs:0, bookmarks:[], khatma_progress:0
+      });
+      curUserProfile={id:curUser.id,name,avatar_url:name[0]?.toUpperCase()||'م',role:'user',khatma_progress:0,listened_ayahs:0,bookmarks:[]};
+      return;
+    }
+    if(data){
+      curUserProfile=data;
+      if(data.bookmarks && Array.isArray(data.bookmarks) && BOOKMARKS.length===0){
+        BOOKMARKS=data.bookmarks;
+        saveLocal();
+      }
+    }
+  }catch(e){console.warn('loadProfile error:',e);}
+}
+async function syncProfile(){
+  if(!curUser)return;
+  try{
+    await sb.from('profiles').upsert({
+      id:curUser.id,
+      listened_ayahs:STATS.ayahs||0,
+      bookmarks:BOOKMARKS,
+      khatma_progress:curUserProfile?.khatma_progress||0,
+    });
+    if(curUserProfile) curUserProfile.bookmarks=BOOKMARKS;
+  }catch(e){console.warn('syncProfile error:',e);}
+}
+async function loadVideos(){
+  try{const {data,error}=await sb.from('videos').select('*').order('created_at',{ascending:false});if(!error&&data)VIDEOS=data;}catch{}
+}
+
+// Fetch all reciters from MP3Quran API and merge with existing list
+async function fetchMP3QuranReciters(){
+  try{
+    const r=await fetch('https://www.mp3quran.net/api/v3/reciters?language=ar');
+    if(!r.ok) return;
+    const d=await r.json();
+    if(!d.reciters) return;
+    MP3_RECITERS=d.reciters;
+    let added=0;
+    for(const rec of d.reciters){
+      const m=rec.moshaf?.[0];
+      if(!m?.server) continue;
+      const recId='mp3q_'+rec.id;
+      if(REC_DATA.find(x=>x.id===recId)) continue; // already exists
+      const colors=['#7c6af7','#c9a84c','#1db954','#e91e8c','#f39c12','#00bcd4','#9c27b0','#3f51b5','#e74c3c','#3498db','#ff5722','#16a085','#8e44ad','#2980b9','#27ae60'];
+      const col=colors[(REC_DATA.length+added)%colors.length];
+      REC_DATA.push({
+        id:recId, name:rec.name, en:rec.name,
+        server:m.server, style:'مرتّل',
+        country:'🌍', icon:rec.name[0]||'ق',
+        color:col, listeners:'—',
+        surahs:m.surah_total||114, bio:'قارئ من MP3Quran'
+      });
+      added++;
+    }
+    if(added>0){
+      saveLocal();
+      renderSbRec();
+      renderAllRec();
+      notify(`تم تحميل ${toAr(added)} قارئ جديد من MP3Quran ✓`);
+    }
+  }catch(e){
+    // Silent fail - built-in reciters are already loaded
+  }
+}
+
+/* Admin button is in profile page only — no sidebar/topbar button */
+function showAdminUI(){ /* profile page has the button always */ }
+function hideAdminUI(){ /* no-op */ }
+
+/* ════════════════════ AUTH ════════════════════ */
+const openAuthOrProfile=()=>curUser?go('profile',null):showAuth();
+const showAuth=()=>document.getElementById('authModal').classList.add('show');
+const closeAuth=()=>document.getElementById('authModal').classList.remove('show');
+function swAuthTab(t){
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('on',i===(t==='login'?0:1)));
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=t==='register'?'block':'none';
+  document.getElementById('authErr').textContent='';
+}
+async function doLogin(){
+  const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPass').value;
+  if(!e||!p){document.getElementById('authErr').textContent='أدخل البريد وكلمة المرور';return;}
+  const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='جاري...';
+  const {error}=await sb.auth.signInWithPassword({email:e,password:p});
+  btn.disabled=false;btn.textContent='دخول';
+  if(error){document.getElementById('authErr').textContent='❌ '+error.message;return;}
+  closeAuth();notify('أهلاً بك 👋');
+}
+async function doRegister(){
+  const n=document.getElementById('regName').value.trim();
+  const e=document.getElementById('regEmail').value.trim();
+  const p=document.getElementById('regPass').value;
+  if(!n||!e||!p){document.getElementById('authErr').textContent='أدخل كل البيانات';return;}
+  if(p.length<6){document.getElementById('authErr').textContent='كلمة المرور قصيرة جداً';return;}
+  const btn=document.getElementById('registerBtn');btn.disabled=true;btn.textContent='جاري...';
+  const {data,error}=await sb.auth.signUp({email:e,password:p});
+  btn.disabled=false;btn.textContent='إنشاء حساب';
+  if(error){document.getElementById('authErr').textContent='❌ '+error.message;return;}
+  if(data.user){
+    await sb.from('profiles').upsert({id:data.user.id,name:n,avatar_url:n[0].toUpperCase(),role:'user',listened_ayahs:0,bookmarks:[],khatma_progress:0});
+  }
+  closeAuth();notify('تم إنشاء حسابك 🎉');
+}
+async function doLogout(){await sb.auth.signOut();curUser=null;curUserProfile=null;updateUserUI();notify('تم تسجيل الخروج');go('home',null);}
+
+function updateUserUI(){
+  const nm=curUserProfile?.name||curUser?.email?.split('@')[0]||'تسجيل الدخول';
+  const av=curUserProfile?.avatar_url||(curUser?curUser.email[0].toUpperCase():'م');
+  const isAdmin=(curUserProfile?.role==='admin')||isAdminEmail(curUser?.email);
+  document.getElementById('uNm').textContent=nm;
+  document.getElementById('uAv').textContent=av;
+  document.getElementById('uTag').textContent=curUser?(isAdmin?'👑 مدير':'✓ مستخدم'):'اضغط للدخول';
+  document.getElementById('uTag').style.color=curUser?(isAdmin?'var(--red)':'var(--green)'):'var(--ac)';
+  document.getElementById('topUserBtn').textContent=curUser?av:'👤';
+}
+
+/* ════════════════════ RENDER ════════════════════ */
+function renderSbRec(){
+  document.getElementById('sbRec').innerHTML=REC_DATA.map(r=>`
+    <div class="sb-it ${r.id===curRec?'on':''}" onclick="selectRec('${r.id}');closeSb()">
+      <div class="sb-av" style="background:${r.color}20;color:${r.color}">${r.icon}</div>
+      <div class="sb-nm">${r.name}</div>
+    </div>`).join('');
+}
+
+const scCard=s=>`<div class="sc ${curSurahNum===s.number&&fullAudioSurahNum===s.number?'pl':''}" onclick="openSurah(${s.number})"><div class="sc-num">${toAr(s.number)}</div><div class="sc-info"><div class="sc-ar">${s.name}</div><div class="sc-en">${s.englishNameTranslation}</div><div class="sc-tags"><span class="tag ${s.revelationType==='Meccan'?'tag-mak':'tag-mad'}">${s.revelationType==='Meccan'?'مكية':'مدنية'}</span><span class="tag-cnt">${toAr(s.numberOfAyahs)} آية</span></div></div><button class="sc-play" onclick="event.stopPropagation();openPlayerPage(${s.number})">▶</button></div>`;
+
+function renderHome(){
+  const top3=REC_DATA.slice(0,3);
+  document.getElementById('homeRecHero').innerHTML=`
+    <div class="rec-big" onclick="openReciter('${top3[0].id}')" style="background:linear-gradient(135deg,${top3[0].color}28,#0c0c0f)">
+      <div class="rec-big-bg"><span style="font-size:100px;opacity:.1;font-weight:800;color:${top3[0].color}">${top3[0].icon}</span></div>
+      <div class="rec-big-ov"></div>
+      <div class="rec-big-body">
+        <div class="rec-badge" style="background:${top3[0].color}22;border:1px solid ${top3[0].color}50;color:${top3[0].color}">✦ مختار</div>
+        <div class="rec-big-name">${top3[0].name}</div>
+        <div class="rec-big-sub">${top3[0].country} ${top3[0].style}</div>
+        <button class="rec-play" style="background:${top3[0].color}" onclick="event.stopPropagation();selectRec('${top3[0].id}');openPlayerPage(1)">▶</button>
+      </div>
+    </div>
+    <div class="rec-side" style="display:flex;flex-direction:column;gap:11px">
+      ${top3.slice(1).map(r=>`
+        <div class="rec-sm" onclick="openReciter('${r.id}')" style="flex:1">
+          <div class="rec-sm-av" style="background:${r.color}18;border:2px solid ${r.color}30;color:${r.color}">${r.icon}</div>
+          <div class="rec-sm-name">${r.name}</div>
+          <div class="rec-sm-style" style="color:${r.color}">${r.style}</div>
+          <div class="rec-sm-cnt">${r.country}•${r.listeners}</div>
+          <button class="rec-sm-play" style="background:${r.color}" onclick="event.stopPropagation();selectRec('${r.id}');openPlayerPage(1)">▶</button>
+        </div>`).join('')}
+    </div>`;
+  const feat=SJ('noor8_feat',[1,18,36,55,67,78,112,113,114,2]);
+  document.getElementById('homeSurahs').innerHTML=feat.slice(0,6).map(n=>{const s=SURAHS.find(x=>x.number===n);return s?scCard(s):'';}).join('');
+  renderHomeVids();
+}
+
+function renderAllSurahs(f='all'){
+  let l=SURAHS;
+  if(f==='mak')l=l.filter(s=>s.revelationType==='Meccan');
+  else if(f==='mad')l=l.filter(s=>s.revelationType==='Medinan');
+  else if(f==='juz30')l=l.filter(s=>s.number>=78);
+  else if(f==='short')l=l.filter(s=>s.numberOfAyahs<=20);
+  else if(f==='long')l=l.filter(s=>s.numberOfAyahs>=100);
+  document.getElementById('allSurahsGrid').innerHTML=l.map(s=>scCard(s)).join('');
+}
+function filterS(f,el){document.querySelectorAll('#surFilters button').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderAllSurahs(f);}
+
+function renderAllRec(){
+  document.getElementById('allRecGrid').innerHTML=REC_DATA.map(r=>`
+    <div class="rc ${r.id===curRec?'cur':''}" onclick="openReciter('${r.id}')">
+      <span class="rc-check">✓</span>
+      <div class="rc-av" style="background:${r.color}18;border-color:${r.color}35;color:${r.color}">
+        <span style="font-size:22px;font-weight:800">${r.icon}</span>
+        <div class="rc-ring"></div>
+      </div>
+      <div class="rc-name">${r.name}</div>
+      <div class="rc-style" style="color:${r.color}">${r.style}</div>
+      <div class="rc-info">${r.country}</div>
+      <div class="rc-cnt">${r.listeners||''}</div>
+      <button class="rc-btn" style="background:${r.color}" onclick="event.stopPropagation();selectRec('${r.id}');openPlayerPage(1)">▶</button>
+    </div>`).join('');
+  document.getElementById('curRecLabel').textContent='القارئ: '+(REC_DATA.find(r=>r.id===curRec)?.name||'');
+}
+
+function openReciter(id){
+  const r=REC_DATA.find(x=>x.id===id);if(!r)return;
+  go('reciter',null);
+  document.getElementById('rphBg').style.background=`linear-gradient(135deg,${r.color}24,#0c0c0f)`;
+  document.getElementById('rphAv').innerHTML=`<span style="font-size:26px;font-weight:800;color:${r.color}">${r.icon}</span>`;
+  document.getElementById('rphAv').style.cssText+=`;border-color:${r.color}50;background:${r.color}15`;
+  document.getElementById('rphName').textContent=r.name;
+  document.getElementById('rphMeta').innerHTML=`<span>🎙 ${r.style}</span><span>👥 ${r.listeners||'—'}</span><span>🌍 ${r.country}</span>`;
+  document.getElementById('rphActs').innerHTML=`
+    <button class="btn-p" style="background:${r.color}" onclick="selectRec('${id}');openPlayerPage(1)">▶ استمع</button>
+    <button class="btn-g" onclick="selectRec('${id}')">✓ اختيار</button>`;
+  document.getElementById('recStats').innerHTML=[
+    {n:toAr(r.surahs||114),l:'السور'},{n:'٦٢٣٦',l:'الآيات'},{n:r.listeners||'—',l:'مستمع'},{n:r.style,l:'الأسلوب'}
+  ].map(x=>`<div style="background:var(--bg2);border-radius:var(--rs);padding:11px;border:1px solid var(--bdr);text-align:center"><div style="font-size:16px;font-weight:800;color:var(--ac);margin-bottom:2px">${x.n}</div><div style="font-size:9px;color:var(--t3)">${x.l}</div></div>`).join('');
+  const albs=ALBUMS_DB[id]||ALBUMS_DB.default;
+  document.getElementById('recAlbums').innerHTML=albs.map(a=>`
+    <div class="alb" onclick="selectRec('${id}');openPlayerPage(1)">
+      <div class="alb-cv" style="background:${a.col}20">${a.em}
+        <button class="alb-pl" style="background:${a.col}" onclick="event.stopPropagation();selectRec('${id}');openPlayerPage(1)">▶</button>
+      </div>
+      <div class="alb-name">${a.n}</div><div class="alb-meta">${a.surahs}•${a.year}</div>
+    </div>`).join('');
+  document.getElementById('recSurahs').innerHTML=`
+    <div style="background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);padding:12px;margin-bottom:12px;grid-column:1/-1;font-size:12px;color:var(--t2);line-height:1.8">${r.bio}</div>
+    ${[1,18,36,55,67,112,113,114].map(n=>{const s=SURAHS.find(x=>x.number===n);return s?scCard(s):'';}).join('')}`;
+}
+
+function selectRec(id){
+  curRec=id;
+  const r=REC_DATA.find(x=>x.id===id);
+  renderSbRec();renderAllRec();
+  document.getElementById('shRecLabel').textContent=r?'القارئ: '+r.name:'';
+  notify('تم اختيار: '+(r?.name||id));
+  if(fullAudioSurahNum) loadFullSurah(fullAudioSurahNum);
+}
+
+/* ════════ SURAH VIEW ════════ */
+async function openSurah(num){
+  go('surah',null);curSurahNum=num;
+  const s=SURAHS.find(x=>x.number===num);if(!s)return;
+  document.getElementById('shAr').textContent=s.name;
+  document.getElementById('shEn').textContent=s.englishName+' — '+s.englishNameTranslation;
+  document.getElementById('shPills').innerHTML=`
+    <span class="pill ${s.revelationType==='Meccan'?'pill-mak':'pill-mad'}">${s.revelationType==='Meccan'?'مكية':'مدنية'}</span>
+    <span class="pill pill-def">${toAr(s.numberOfAyahs)} آية</span>
+    <span class="pill pill-def">الجزء ${toAr(s.juzNumber||'-')}</span>`;
+  document.getElementById('bismiEl').style.display=(num===1||num===9)?'none':'block';
+  document.getElementById('heroTitle').textContent=s.name;
+  const r=REC_DATA.find(x=>x.id===curRec);
+  document.getElementById('shRecLabel').textContent=r?'القارئ: '+r.name:'';
+  document.getElementById('ayahList').innerHTML='<div style="text-align:center;padding:36px;color:var(--t3);font-size:12px"><div class="spinner" style="margin:0 auto 8px"></div>جاري التحميل...</div>';
+  try{
+    const [arR,enR]=await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-uthmani`),
+      fetch(`https://api.alquran.cloud/v1/surah/${num}/en.asad`)
+    ]);
+    const [arD,enD]=await Promise.all([arR.json(),enR.json()]);
+    if(arD.code===200){curSurahData={arabic:arD.data,english:enD.code===200?enD.data:null};renderAyahs();}
+    else throw 0;
+  }catch{document.getElementById('ayahList').innerHTML='<div class="empty"><span>⚠️</span>تعذر التحميل</div>';}
+}
+
+function renderAyahs(){
+  if(!curSurahData)return;
+  const ar=curSurahData.arabic.ayahs,en=curSurahData.english?.ayahs;
+  document.getElementById('ayahList').innerHTML=ar.map((a,i)=>{
+    const bm=BOOKMARKS.find(b=>b.s===curSurahNum&&b.a===a.numberInSurah);
+    return`<div class="ayah-row" id="ay${i}">
+      <div class="ay-ar">${a.text} <span class="ay-num">${toAr(a.numberInSurah)}</span></div>
+      ${en?.[i]?`<div class="ay-tr">${en[i].text}</div>`:''}
+      <div class="ay-acts">
+        <button class="ay-btn ${bm?'on':''}" onclick="toggleBm(${a.numberInSurah},this)">🔖 ${bm?'محفوظة':'حفظ'}</button>
+        <span style="margin-right:auto;font-size:9px;color:var(--t3)">آية ${toAr(a.numberInSurah)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════ VIDEOS ════════ */
+const getYtId=url=>{if(!url)return'';const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:url.trim().replace(/\s/g,'').substring(0,11);};
+const ytThumb=id=>`https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+function previewVd(){
+  const id=getYtId(document.getElementById('vd-url').value);
+  if(id.length===11){
+    document.getElementById('vd-prev-img').src=ytThumb(id);
+    document.getElementById('vd-preview').style.display='block';
+    document.getElementById('vd-embed-test').innerHTML=`
+      <div style="font-size:10px;color:var(--t2)">ID: <code style="color:#a29bfe">${id}</code> — 
+        <a href="https://www.youtube-nocookie.com/embed/${id}" target="_blank" style="color:var(--ac)">اختبر الـ Embed ↗</a>
+      </div>`;
+  } else document.getElementById('vd-preview').style.display='none';
+}
+
+function vidCard(v){
+  const id=v.yt_id||v.id||'';
+  if(!id) return '';
+  return`<div class="vid-card" onclick="watchVideo('${id}')">
+    <div class="vid-thumb">
+      <img src="${ytThumb(id)}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 180%22><rect fill=%22%2322222e%22 width=%22320%22 height=%22180%22/><text fill=%22%234a4768%22 font-size=%2236%22 x=%22160%22 y=%2298%22 text-anchor=%22middle%22>🎬</text></svg>'">
+      <div class="vid-play-ov"><div class="vid-play-ic">▶</div></div>
+      ${v.duration?`<div class="vid-dur">${v.duration}</div>`:''}
+    </div>
+    <div class="vid-info">
+      <div class="vid-title">${v.title||''}</div>
+      <div class="vid-channel">${v.channel||''}</div>
+      <div class="vid-meta">${v.category||''}</div>
+    </div>
+  </div>`;
+}
+
+function renderHomeVids(){
+  const el=document.getElementById('homeVids');if(!el)return;
+  if(!VIDEOS.length){el.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 0">أضف فيديوهات من لوحة التحكم ⚙</div>';return;}
+  el.innerHTML=VIDEOS.slice(0,4).map(v=>vidCard(v)).join('');
+}
+function renderAllVids(cat='all'){
+  const l=cat==='all'?VIDEOS:VIDEOS.filter(v=>v.category===cat);
+  const el=document.getElementById('allVidsGrid');if(!el)return;
+  document.getElementById('vidSubtitle').textContent=toAr(l.length)+' فيديو';
+  if(!l.length){el.innerHTML='<div class="empty"><span>🎬</span>لا توجد فيديوهات<br><span style="font-size:10px;margin-top:3px;display:block">أضف من لوحة التحكم ⚙</span></div>';return;}
+  el.innerHTML=l.map(v=>vidCard(v)).join('');
+}
+function filterVids(cat,el){document.querySelectorAll('#vidFilters button').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderAllVids(cat);}
+
+/* ════════ VIDEO ════════ */
+let _currentVidId=null;
+
+function watchVideo(ytId){
+  if(!ytId)return;
+  _currentVidId=ytId;
+  const v=VIDEOS.find(x=>(x.yt_id||x.id)===ytId);
+  go('video',null);
+
+  // Show iframe, hide fallback
+  const iframeWrap=document.getElementById('vidIframeWrap');
+  const fallback=document.getElementById('vidFallback');
+  if(iframeWrap) iframeWrap.style.display='block';
+  if(fallback)   fallback.style.display='none';
+
+  // Set fallback content
+  if(document.getElementById('vidFallbackTitle')) document.getElementById('vidFallbackTitle').textContent=v?.title||'';
+  if(document.getElementById('vidFallbackLink')) document.getElementById('vidFallbackLink').href=`https://www.youtube.com/watch?v=${ytId}`;
+  if(document.getElementById('vidYtLink'))       document.getElementById('vidYtLink').href=`https://www.youtube.com/watch?v=${ytId}`;
+
+  // Load iframe
+  const iframe=document.getElementById('vidIframe');
+  iframe.src='about:blank';
+  setTimeout(()=>{
+    iframe.src=`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  },250);
+
+  // Error 153: iframe loads but shows "Video unavailable" — detect via postMessage from YT
+  window._ytEmbedListener && window.removeEventListener('message', window._ytEmbedListener);
+  window._ytEmbedListener = e=>{
+    try{
+      const data=typeof e.data==='string'?JSON.parse(e.data):e.data;
+      // YT sends info.playerState=-1 or error events
+      if(data?.event==='infoDelivery' && data?.info?.errorCode){
+        if(_currentVidId===ytId) showVidFallback(ytId);
+      }
+      if(data?.event==='onError'){
+        if(_currentVidId===ytId) showVidFallback(ytId);
+      }
+    }catch{}
+  };
+  window.addEventListener('message', window._ytEmbedListener);
+
+  document.getElementById('vidPageTitle').textContent=v?.title||'';
+  document.getElementById('vidPageMeta').innerHTML=`
+    ${v?.channel?`<span>📺 ${v.channel}</span>`:''}
+    ${v?.category?`<span>🏷 ${v.category}</span>`:''}
+    ${v?.duration?`<span>⏱ ${v.duration}</span>`:''}`;
+  document.getElementById('vidPageDesc').textContent=v?.description||'';
+  document.getElementById('vidSideList').innerHTML=VIDEOS.filter(x=>(x.yt_id||x.id)!==ytId).map(vv=>`
+    <div class="vid-side-item" onclick="watchVideo('${vv.yt_id||vv.id}')">
+      <div class="vid-side-thumb"><img src="${ytThumb(vv.yt_id||vv.id)}" loading="lazy"></div>
+      <div style="flex:1;min-width:0">
+        <div class="vid-side-title">${vv.title||''}</div>
+        <div class="vid-side-meta">${vv.channel||''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function showVidFallback(ytId){
+  const iw=document.getElementById('vidIframeWrap');
+  const fb=document.getElementById('vidFallback');
+  if(iw)iw.style.display='none';
+  if(fb){fb.style.display='flex';}
+  notify('⚠️ هذا الفيديو لا يدعم التشغيل المدمج — استخدم "فتح في يوتيوب"');
+}
+
+/* ════════ BOOKMARKS ════════ */
+async function toggleBm(ayahNum,btn){
+  const idx=BOOKMARKS.findIndex(b=>b.s===curSurahNum&&b.a===ayahNum);
+  const s=SURAHS.find(x=>x.number===curSurahNum);
+  const a=curSurahData?.arabic.ayahs.find(x=>x.numberInSurah===ayahNum);
+  if(idx>=0){BOOKMARKS.splice(idx,1);btn.classList.remove('on');btn.textContent='🔖 حفظ';notify('تمت الإزالة');}
+  else{BOOKMARKS.push({s:curSurahNum,a:ayahNum,sName:s?.name,text:a?.text||'',date:Date.now()});btn.classList.add('on');btn.textContent='🔖 محفوظة';notify('تمت الإضافة 🔖');}
+  saveLocal();renderBm();if(curUser)syncProfile();
+}
+function bmCurSurah(){if(!fullAudioSurahNum)return;const s=SURAHS.find(x=>x.number===fullAudioSurahNum);if(s)notify('📖 سورة '+s.name+' محفوظة');}
+function renderBm(){
+  const el=document.getElementById('bmListEl');
+  const cl=document.getElementById('bmCountLbl');
+  if(cl) cl.textContent=toAr(BOOKMARKS.length)+' عنصر';
+  const badge=document.getElementById('bmSbBadge');
+  if(badge){
+    badge.textContent=BOOKMARKS.length>0?toAr(BOOKMARKS.length):'';
+    badge.style.display=BOOKMARKS.length>0?'inline':'none';
+  }
+  if(!el)return;
+  if(!BOOKMARKS.length){
+    el.innerHTML='<div class="empty"><span>🔖</span>لا توجد محفوظات بعد<br><span style="font-size:11px;margin-top:6px;display:block;color:var(--t3)">افتح أي سورة واحفظ آياتك المفضلة</span></div>';
+    return;
+  }
+  el.innerHTML=BOOKMARKS.map(b=>`
+    <div class="bm-item" onclick="openSurah(${b.s})">
+      <div class="bm-num">${toAr(b.a)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="bm-txt">${(b.text||'').slice(0,80)}...</div>
+        <div class="bm-meta">سورة ${b.sName||b.s} • آية ${toAr(b.a)} • ${new Date(b.date||Date.now()).toLocaleDateString('ar-EG')}</div>
+      </div>
+      <button class="ay-btn" onclick="event.stopPropagation();BOOKMARKS=BOOKMARKS.filter(x=>!(x.s===${b.s}&&x.a===${b.a}));saveLocal();renderBm();if(curUser)syncProfile()" title="حذف">🗑</button>
+    </div>`).join('');
+}
+
+/* ════════ PROFILE ════════ */
+function renderProfile(){
+  const el=document.getElementById('profileContent');if(!el)return;
+  if(!curUser){
+    el.innerHTML=`<div class="empty"><span>👤</span>غير مسجل الدخول<br><button class="btn-p" style="margin-top:12px" onclick="showAuth()">تسجيل الدخول</button></div>`;
+    return;
+  }
+  const p=curUserProfile||{};
+  const nm=p.name||curUser.email?.split('@')[0]||'مستخدم';
+  const av=p.avatar_url||nm[0]?.toUpperCase()||'م';
+  const kp=p.khatma_progress||0;const kPct=Math.round(kp/6236*100);
+  // مدير = role=admin في Supabase أو إيميله في قائمة المديرين
+  const isAdmin=p.role==='admin'||isAdminEmail(curUser.email);
+  el.innerHTML=`<div class="user-grid">
+    <div class="user-card">
+      <div class="up-av">${av}</div>
+      <div class="up-name">${nm}</div>
+      <div class="up-email">${curUser.email||''}</div>
+      <span class="up-role ${isAdmin?'admin':'user'}">${isAdmin?'👑 مدير':'✓ مستخدم'}</span>
+      ${isAdmin?`<div style="margin-top:8px"><button class="up-btn adm-btn-special" onclick="openAdmLogin()">⚙ لوحة التحكم</button></div>`:''}
+      <div class="up-stats">
+        <div class="ups"><div class="ups-n">${toAr(p.listened_ayahs||STATS.ayahs||0)}</div><div class="ups-l">آية</div></div>
+        <div class="ups"><div class="ups-n">${toAr(BOOKMARKS.length)}</div><div class="ups-l">محفوظات</div></div>
+        <div class="ups"><div class="ups-n">${toAr(kp)}</div><div class="ups-l">ختمة</div></div>
+        <div class="ups"><div class="ups-n">${toAr(kPct)}%</div><div class="ups-l">التقدم</div></div>
+      </div>
+      <button class="up-btn" onclick="editProfile()">✏️ تعديل الاسم</button>
+      <button class="up-btn danger" onclick="if(confirm('تسجيل الخروج؟'))doLogout()">⎋ خروج</button>
+    </div>
+    <div>
+      <div class="user-tabs">
+        <button class="utab on" onclick="upTab('khatma',this)">الختمة</button>
+        <button class="utab" onclick="upTab('bm',this)">محفوظات</button>
+        <button class="utab" onclick="upTab('stats',this)">إحصائيات</button>
+      </div>
+      <div id="upTabContent">
+        <div class="khatma-box">
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px">تقدم الختمة القرآنية 📖</div>
+          <div class="kh-bar-wrap"><div class="kh-bar" style="width:${kPct}%"></div></div>
+          <div class="kh-meta"><span>${toAr(kp)} / ٦٢٣٦ آية</span><span>${toAr(kPct)}%</span></div>
+          <div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap">
+            <button class="btn-p" style="padding:6px 12px;font-size:11px" onclick="addKhatma(10)">➕ ١٠ آيات</button>
+            <button class="btn-p" style="padding:6px 12px;font-size:11px" onclick="addKhatma(50)">➕ ٥٠ آية</button>
+            <button class="btn-g" style="font-size:11px;padding:5px 10px" onclick="if(confirm('إعادة تعيين؟'))resetKhatma()">↺ إعادة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function upTab(tab,el){
+  document.querySelectorAll('.utab').forEach(b=>b.classList.remove('on'));el.classList.add('on');
+  const c=document.getElementById('upTabContent');
+  const p=curUserProfile||{};
+  const kp=p.khatma_progress||0;const kPct=Math.round(kp/6236*100);
+  if(tab==='bm') c.innerHTML=BOOKMARKS.length?BOOKMARKS.map(b=>`<div class="bm-item" onclick="openSurah(${b.s})"><div class="bm-num">${toAr(b.a)}</div><div><div class="bm-txt">${(b.text||'').slice(0,60)}...</div><div class="bm-meta">سورة ${b.sName||b.s}</div></div></div>`).join(''):'<div class="empty"><span>🔖</span>لا توجد محفوظات</div>';
+  else if(tab==='stats') c.innerHTML=`<div class="stat-cards">${[{ic:'🎧',n:toAr(p.listened_ayahs||STATS.ayahs||0),l:'آية'},{ic:'📖',n:toAr(STATS.surahs||0),l:'سورة'},{ic:'🔖',n:toAr(BOOKMARKS.length),l:'محفوظة'}].map(x=>`<div class="stc"><div class="stc-ic">${x.ic}</div><div class="stc-n">${x.n}</div><div class="stc-l">${x.l}</div></div>`).join('')}</div>`;
+  else c.innerHTML=`<div class="khatma-box"><div style="font-size:13px;font-weight:700;margin-bottom:4px">تقدم الختمة 📖</div><div class="kh-bar-wrap"><div class="kh-bar" style="width:${kPct}%"></div></div><div class="kh-meta"><span>${toAr(kp)}/٦٢٣٦</span><span>${toAr(kPct)}%</span></div><div style="display:flex;gap:7px;margin-top:10px"><button class="btn-p" style="padding:6px 12px;font-size:11px" onclick="addKhatma(10)">➕ ١٠</button><button class="btn-p" style="padding:6px 12px;font-size:11px" onclick="addKhatma(50)">➕ ٥٠</button></div></div>`;
+}
+
+async function addKhatma(n){if(!curUser||!curUserProfile)return;const nv=Math.min(6236,(curUserProfile.khatma_progress||0)+n);await sb.from('profiles').update({khatma_progress:nv}).eq('id',curUser.id);curUserProfile.khatma_progress=nv;notify('تم إضافة '+n+' آيات ✓');renderProfile();}
+async function resetKhatma(){if(!curUser)return;await sb.from('profiles').update({khatma_progress:0}).eq('id',curUser.id);if(curUserProfile)curUserProfile.khatma_progress=0;notify('تمت إعادة التعيين');renderProfile();}
+async function editProfile(){const n=prompt('اسمك الجديد:',curUserProfile?.name||'');if(!n)return;const av=n[0].toUpperCase();await sb.from('profiles').update({name:n,avatar_url:av}).eq('id',curUser.id);if(curUserProfile){curUserProfile.name=n;curUserProfile.avatar_url=av;}updateUserUI();renderProfile();notify('تم التحديث ✓');}
+
+/* ════════ STATS ════════ */
+function renderStats(){
+  const s=document.getElementById('statCards');
+  if(s)s.innerHTML=[{ic:'🎧',n:toAr(STATS.ayahs||0),l:'آية'},{ic:'📖',n:toAr(STATS.surahs||0),l:'سورة'},{ic:'🔖',n:toAr(BOOKMARKS.length),l:'محفوظة'}].map(x=>`<div class="stc"><div class="stc-ic">${x.ic}</div><div class="stc-n">${x.n}</div><div class="stc-l">${x.l}</div></div>`).join('');
+}
+
+/* ════════ SEARCH ════════ */
+function renderGenres(){
+  document.getElementById('genreGrid').innerHTML=GENRES.map(g=>`
+    <div class="genre-c" style="background:${g.bg};border:1px solid ${g.col}22"
+      onclick="${g.f==='vid'?`go('videos',null)`:`go('surahs',null);filterS('${g.f}',document.querySelector('#surFilters button'))`}">
+      <span class="genre-ic">${g.ic}</span>
+      <span class="genre-nm" style="color:${g.col}">${g.n}</span>
+    </div>`).join('');
+}
+function doSearch(q){
+  const el=document.getElementById('searchContent');
+  if(!q.trim()){el.innerHTML='<div class="sec-hd mb22"><div class="sec-t">التصنيفات</div></div><div class="genre-grid" id="genreGrid"></div>';renderGenres();return;}
+  const sm=SURAHS.filter(s=>s.name.includes(q)||s.englishName.toLowerCase().includes(q.toLowerCase())||String(s.number)===q);
+  const rm=REC_DATA.filter(r=>r.name.includes(q)||r.en.toLowerCase().includes(q.toLowerCase()));
+  const vm=VIDEOS.filter(v=>(v.title||'').includes(q)||(v.channel||'').includes(q));
+  let h=`<div style="font-size:16px;font-weight:700;margin-bottom:12px">نتائج "${q}"</div>`;
+  if(rm.length)h+=`<div style="font-size:13px;font-weight:700;margin-bottom:10px">قراء</div><div class="rec-grid" style="margin-bottom:15px">${rm.map(r=>`<div class="rc" onclick="openReciter('${r.id}')"><div class="rc-av" style="background:${r.color}18;border-color:${r.color}35;color:${r.color}"><span style="font-size:20px;font-weight:800">${r.icon}</span></div><div class="rc-name">${r.name}</div><div class="rc-style" style="color:${r.color}">${r.style}</div></div>`).join('')}</div>`;
+  if(sm.length)h+=`<div style="font-size:13px;font-weight:700;margin-bottom:10px">سور</div><div class="sur-grid" style="margin-bottom:15px">${sm.map(s=>scCard(s)).join('')}</div>`;
+  if(vm.length)h+=`<div style="font-size:13px;font-weight:700;margin-bottom:10px">فيديوهات</div><div class="vid-grid">${vm.map(v=>vidCard(v)).join('')}</div>`;
+  if(!rm.length&&!sm.length&&!vm.length)h+='<div class="empty"><span>🔍</span>لا توجد نتائج</div>';
+  el.innerHTML=h;
+}
+function liveSearch(q){if(q.length>0){go('search',null);document.getElementById('mainSrch').value=q;doSearch(q);}}
+
+function renderPage(pg){
+  if(pg==='home')renderHome();
+  else if(pg==='surahs')renderAllSurahs();
+  else if(pg==='reciters')renderAllRec();
+  else if(pg==='player')renderPpsSidebar();
+  else if(pg==='videos')renderAllVids();
+  else if(pg==='bookmarks')renderBm();
+  else if(pg==='stats')renderStats();
+  else if(pg==='search')renderGenres();
+  else if(pg==='profile')renderProfile();
+}
+
+/* ════════════════════ ADMIN ════════════════════ */
+/* ═══ ADMIN EMAILS — المديرون المسموح لهم ═══ */
+const ADMIN_EMAILS = ['omar@gmail.com','mrtrky814@gmail.com'];
+
+function isAdminEmail(email){ return ADMIN_EMAILS.includes((email||'').toLowerCase().trim()); }
+
+const openAdmLogin=()=>{
+  // لو مسجل دخول وليس مدير — لا يُسمح
+  if(curUser && !isAdminEmail(curUser.email)){
+    notify('⛔ لوحة التحكم للمديرين فقط');
+    return;
+  }
+  // تخصيص نص الـ modal
+  const subtitle=document.getElementById('admLoginSubtitle');
+  const hint=document.getElementById('admLoginHint');
+  const userField=document.getElementById('admUser').parentElement||document.getElementById('admUser');
+  if(curUser && isAdminEmail(curUser.email)){
+    // مدير مسجل دخول — اخفي username field
+    if(subtitle) subtitle.textContent='مرحباً '+( curUser.email.split('@')[0])+'، أدخل كلمة المرور';
+    document.getElementById('admUser').style.display='none';
+    if(hint) hint.textContent='كلمة المرور الافتراضية: noor2024';
+  } else {
+    // غير مسجل — اظهر username
+    if(subtitle) subtitle.textContent='أدخل بيانات المدير';
+    document.getElementById('admUser').style.display='block';
+    if(hint) hint.textContent='اسم المستخدم: admin — كلمة المرور: noor2024';
+  }
+  document.getElementById('admPass').value='';
+  document.getElementById('admErr').textContent='';
+  document.getElementById('admLoginModal').classList.add('show');
+};
+const closeAdmLogin=()=>document.getElementById('admLoginModal').classList.remove('show');
+
+function admDoLogin(){
+  const u=document.getElementById('admUser').value.trim();
+  const p=document.getElementById('admPass').value;
+
+  // التحقق من كلمة السر
+  if(p!==ADM_CREDS.pass){
+    document.getElementById('admErr').textContent='❌ كلمة المرور خاطئة';
+    setTimeout(()=>document.getElementById('admErr').textContent='',2000);
+    return;
+  }
+
+  // التحقق من الإيميل لو مسجل دخول
+  if(curUser && !isAdminEmail(curUser.email)){
+    document.getElementById('admErr').textContent='⛔ هذا الحساب ليس مديراً';
+    setTimeout(()=>document.getElementById('admErr').textContent='',2000);
+    return;
+  }
+
+  // التحقق من اسم المستخدم لو ليس مسجلاً
+  if(!curUser && u!==ADM_CREDS.user){
+    document.getElementById('admErr').textContent='❌ بيانات خاطئة';
+    setTimeout(()=>document.getElementById('admErr').textContent='',2000);
+    return;
+  }
+
+  closeAdmLogin();
+  document.getElementById('admPanel').classList.add('show');
+  initAdmPanel();
+}
+const exitAdmin=()=>document.getElementById('admPanel').classList.remove('show');
+let admNT;
+function admNotify(m,c='#6c5ce7'){
+  const n=document.getElementById('admNotif');
+  document.getElementById('admNotifMsg').textContent=m;
+  document.getElementById('admNotifDot').style.background=c;
+  n.classList.add('show');clearTimeout(admNT);admNT=setTimeout(()=>n.classList.remove('show'),2800);
+}
+function admNav(pg,el){
+  document.querySelectorAll('.adm-page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('admp-'+pg)?.classList.add('on');
+  if(el){document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+  if(pg==='dashboard')renderDashboard();
+  else if(pg==='reciters'){renderRecMgr();document.getElementById('mp3RecCount').textContent=MP3_RECITERS.length;}
+  else if(pg==='surahs')renderSurMgr();
+  else if(pg==='videos'){loadVideos().then(()=>{renderVidMgr();renderHomeVids();renderAllVids();});renderVidMgr();}
+  else if(pg==='users')loadUsersAdmin();
+  else if(pg==='appearance')renderAppearancePage();
+}
+
+function initAdmPanel(){
+  renderDashboard();
+  buildColorRow('nr-colors','nr-color');
+  buildColorRow('theme-colors','customColor');
+}
+
+function renderDashboard(){
+  document.getElementById('dashStats').innerHTML=[
+    {ic:'🎤',n:REC_DATA.length,l:'قراء',col:'#7c6af7'},
+    {ic:'📖',n:SURAHS.length||114,l:'سورة',col:'#c9a84c'},
+    {ic:'🎬',n:VIDEOS.length,l:'فيديو',col:'#e91e8c'},
+    {ic:'🗄️',n:'متصل',l:'Supabase',col:'#1db954'}
+  ].map(x=>`<div class="adm-stat-c" style="border-color:${x.col}20">
+    <div style="position:absolute;top:-10px;left:-10px;width:50px;height:50px;border-radius:50%;background:${x.col};opacity:.07"></div>
+    <div style="font-size:18px;margin-bottom:6px">${x.ic}</div>
+    <div class="adm-stat-n" style="color:${x.col}">${x.n}</div>
+    <div class="adm-stat-l">${x.l}</div>
+  </div>`).join('');
+
+  document.getElementById('dbStatusArea').innerHTML=`
+    <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px;margin-bottom:7px">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--green)"></span>متصل ✓
+    </div>
+    <div style="font-size:11px;color:var(--t2);line-height:1.9">
+      📍 tecmdbntjvtdkwbzfhjp<br>
+      👥 المستخدمون: <span id="dbUserCount">...</span><br>
+      🎬 الفيديوهات: <span id="dbVidCount">...</span>
+    </div>`;
+  sb.from('profiles').select('id',{count:'exact'}).then(({count})=>{const el=document.getElementById('dbUserCount');if(el)el.textContent=count||0;});
+  sb.from('videos').select('id',{count:'exact'}).then(({count})=>{const el=document.getElementById('dbVidCount');if(el)el.textContent=count||0;});
+
+  document.getElementById('audioSrcStatus').innerHTML=`
+    <div style="font-size:11px;color:var(--t2);line-height:2.1">
+      <div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:var(--green)"></span><strong>MP3Quran API</strong> — المصدر الأساسي (server مباشر)</div>
+      <div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></span><strong>cdn.islamic.network</strong> — احتياطي تلقائي</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px">
+        URL مثال: https://server8.mp3quran.net/afs/001.mp3 (سورة الفاتحة — مشاري العفاسي)
+      </div>
+    </div>`;
+}
+
+/* ── MP3Quran reciters loader (admin) ── */
+async function loadMP3QuranReciters(){
+  const el=document.getElementById('mp3RecTBody');
+  const resEl=document.getElementById('mp3-test-res');
+  resEl.classList.add('show');resEl.textContent='جاري التحميل من mp3quran.net/api/v3/reciters...';
+  try{
+    const r=await fetch('https://www.mp3quran.net/api/v3/reciters?language=ar');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.reciters) throw new Error('لا توجد بيانات');
+    MP3_RECITERS=d.reciters;
+    document.getElementById('mp3RecCount').textContent=MP3_RECITERS.length;
+    resEl.textContent=`✅ تم تحميل ${MP3_RECITERS.length} قارئ`;
+    el.innerHTML=MP3_RECITERS.map(rec=>{
+      const m=rec.moshaf?.[0];
+      const exists=REC_DATA.find(x=>x.id==='mp3q_'+rec.id);
+      return`<tr>
+        <td><strong style="font-size:12px">${rec.name}</strong></td>
+        <td style="font-size:10px;color:var(--t2)">${m?.name||'—'}</td>
+        <td style="font-size:10px">${m?.surah_total||'—'}</td>
+        <td><code style="font-size:9px;color:#a29bfe">${(m?.server||'').replace('https://','').slice(0,32)}</code></td>
+        <td>
+          ${exists
+            ?'<span class="adm-tag at-g">مضاف ✓</span>'
+            :`<button class="adm-btn adm-btn-g" style="padding:3px 7px;font-size:9px" onclick="importMP3Reciter(${rec.id})">➕ إضافة</button>`
+          }
+        </td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    resEl.textContent='❌ '+e.message+'\n\nتأكد من الاتصال بالإنترنت أو استخدم القراء المدمجين.';
+  }
+}
+
+function importMP3Reciter(id){
+  const r=MP3_RECITERS.find(x=>x.id===id);if(!r)return;
+  const m=r.moshaf?.[0];if(!m?.server)return;
+  const recId='mp3q_'+r.id;
+  if(REC_DATA.find(x=>x.id===recId)){admNotify('القارئ موجود مسبقاً','#e74c3c');return;}
+  const colors=['#7c6af7','#c9a84c','#1db954','#e91e8c','#f39c12','#00bcd4','#9c27b0','#3f51b5'];
+  const col=colors[REC_DATA.length%colors.length];
+  const icon=r.name[0]||'ق';
+  REC_DATA.push({
+    id:recId, name:r.name, en:r.name,
+    server:m.server, style:'مرتّل',
+    country:'🌍',icon,color:col,
+    listeners:'—',surahs:m.surah_total||114,
+    bio:'قارئ من MP3Quran API'
+  });
+  saveLocal();renderSbRec();renderAllRec();renderRecMgr();
+  admNotify('تم إضافة: '+r.name,'#1db954');
+}
+
+async function testAudio(){
+  const el=document.getElementById('mp3-test-res');el.classList.add('show');el.textContent='جاري اختبار الصوت...';
+  const r=REC_DATA[0];if(!r?.server){el.textContent='لا يوجد قارئ';return;}
+  const url=r.server+'001.mp3';
+  el.textContent=`اختبار: ${url}\n\nجاري التحميل...`;
+  try{
+    const resp=await fetch(url,{method:'HEAD',signal:AbortSignal.timeout?AbortSignal.timeout(6000):undefined});
+    el.textContent=resp.ok?`✅ يعمل! Status: ${resp.status}\nURL: ${url}`:`⚠️ Status: ${resp.status}\nURL: ${url}`;
+  }catch(e){el.textContent=`❌ فشل: ${e.message}\nURL: ${url}`;}
+}
+
+function renderRecMgr(){
+  document.getElementById('recCount').textContent=REC_DATA.length;
+  document.getElementById('recTBody').innerHTML=REC_DATA.map((r,i)=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:24px;height:24px;border-radius:50%;background:${r.color}18;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:${r.color}">${r.icon}</div>
+      <span style="font-size:11px;font-weight:600">${r.name}</span>
+    </div></td>
+    <td><code style="font-size:9px;color:#fdcb6e">${(r.server||r.id||'').replace('https://','').slice(0,35)}</code></td>
+    <td><span class="adm-tag at-b">${r.style}</span></td>
+    <td>
+      <button class="adm-btn adm-btn-g" style="padding:2px 7px;font-size:9px" onclick="selectRec('${r.id}');admNotify('اختيار: ${r.name}','#1db954')">✓</button>
+      <button class="adm-btn adm-btn-d" style="padding:2px 7px;font-size:9px;margin-right:4px" onclick="if(confirm('حذف؟')){REC_DATA.splice(${i},1);saveLocal();renderSbRec();renderAllRec();renderRecMgr();admNotify('تم الحذف','#e74c3c')}">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+
+function addManualReciter(){
+  const name=document.getElementById('nr-name').value.trim();
+  const server=document.getElementById('nr-server').value.trim();
+  if(!name||!server){admNotify('الاسم والـ Server مطلوبان','#e74c3c');return;}
+  const id='manual_'+Date.now();
+  REC_DATA.push({
+    id,name,en:document.getElementById('nr-en').value||name,
+    server:server.endsWith('/')?server:server+'/',
+    style:document.getElementById('nr-style').value,
+    country:document.getElementById('nr-country').value||'🌍',
+    icon:document.getElementById('nr-icon').value||name[0],
+    color:document.getElementById('nr-color').value||'#7c6af7',
+    listeners:'—',surahs:114,bio:'قارئ مضاف يدوياً'
+  });
+  saveLocal();renderSbRec();renderAllRec();renderRecMgr();
+  admNotify('تم إضافة: '+name,'#1db954');
+  ['nr-name','nr-en','nr-server','nr-country','nr-icon'].forEach(x=>{const el=document.getElementById(x);if(el)el.value='';});
+}
+
+function renderSurMgr(){document.getElementById('surCount').textContent=SURAHS.length;renderSurTbl(SURAHS);}
+function renderSurTbl(l){document.getElementById('surTBody').innerHTML=l.slice(0,60).map(s=>`<tr><td style="color:var(--t3)">${s.number}</td><td><div style="font-family:'Amiri';font-size:13px">${s.name}</div></td><td><span class="adm-tag ${s.revelationType==='Meccan'?'at-y':'at-g'}">${s.revelationType==='Meccan'?'مكية':'مدنية'}</span></td><td>${s.numberOfAyahs}</td></tr>`).join('');}
+function filterSurTbl(q){renderSurTbl(SURAHS.filter(s=>!q||s.name.includes(q)||s.englishName.toLowerCase().includes(q.toLowerCase())||String(s.number)===q));}
+async function reloadSurahs(){admNotify('جاري التحميل...');try{const r=await fetch('https://api.alquran.cloud/v1/surah');const d=await r.json();if(d.code===200){SURAHS=d.data;renderSurMgr();renderAllSurahs();renderHome();admNotify('تم ✓','#1db954');}else throw 0;}catch{admNotify('⚠️ تعذر','#e74c3c');}}
+
+function renderVidMgr(){
+  document.getElementById('vidCount').textContent=VIDEOS.length;
+  document.getElementById('vidTBody').innerHTML=VIDEOS.length?VIDEOS.map(v=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <img src="${ytThumb(v.yt_id||v.id||'')}" style="width:55px;border-radius:5px;aspect-ratio:16/9;object-fit:cover">
+      <span style="font-size:11px;font-weight:600">${v.title||''}</span>
+    </div></td>
+    <td><span class="adm-tag at-b" style="font-size:9px">${v.category||'—'}</span></td>
+    <td style="font-size:10px;color:var(--t3)">${v.created_at?new Date(v.created_at).toLocaleDateString('ar-EG'):'—'}</td>
+    <td><button class="adm-btn adm-btn-d" style="padding:3px 7px;font-size:9px" onclick="delVideo(${v.id})">🗑</button></td>
+  </tr>`).join(''):'<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--t3)">لا توجد فيديوهات</td></tr>';
+}
+
+async function addVideo(){
+  const rawUrl=document.getElementById('vd-url').value.trim();
+  const ytId=getYtId(rawUrl);
+  const title=document.getElementById('vd-title').value.trim();
+  if(!ytId||ytId.length!==11){admNotify('رابط يوتيوب غير صحيح','#e74c3c');return;}
+  if(!title){admNotify('العنوان مطلوب','#e74c3c');return;}
+  const btn=document.getElementById('addVidBtn');btn.disabled=true;
+  const res=document.getElementById('vd-res');res.classList.add('show');res.textContent='جاري الإضافة...';
+
+  const payload={yt_id:ytId,title,
+    channel:document.getElementById('vd-channel').value.trim()||null,
+    category:document.getElementById('vd-cat').value,
+    duration:document.getElementById('vd-dur').value.trim()||null,
+    description:document.getElementById('vd-desc').value.trim()||null
+  };
+
+  const {data,error}=await sb.from('videos').insert(payload).select().single();
+  btn.disabled=false;
+
+  if(error){
+    let msg=error.message||'خطأ غير معروف';
+    // RLS policy error
+    if(error.code==='42501'||msg.includes('policy')||msg.includes('permission')||msg.includes('RLS')){
+      msg='❌ خطأ في صلاحيات Supabase (RLS)\n\nشغّل هذا الـ SQL في Supabase:\n\nDROP POLICY IF EXISTS "insert videos" ON public.videos;\nCREATE POLICY "insert videos" ON public.videos\n  FOR INSERT WITH CHECK (true);\nCREATE POLICY "delete videos" ON public.videos\n  FOR DELETE USING (true);\nCREATE POLICY "update videos" ON public.videos\n  FOR UPDATE USING (true);';
+    }
+    res.textContent=msg;
+    admNotify('فشل الإضافة — اقرأ الرسالة','#e74c3c');
+    return;
+  }
+
+  res.textContent='✅ تمت الإضافة! ID: '+data.id;
+  await loadVideos();renderVidMgr();renderHomeVids();renderAllVids();
+  admNotify('تم إضافة: '+title,'#1db954');
+  ['vd-url','vd-title','vd-channel','vd-dur','vd-desc'].forEach(x=>{const el=document.getElementById(x);if(el)el.value='';});
+  document.getElementById('vd-preview').style.display='none';
+}
+
+async function testVidEmbed(){
+  const id=getYtId(document.getElementById('vd-url').value);
+  if(!id||id.length!==11){admNotify('أدخل رابط صحيح','#e74c3c');return;}
+  window.open(`https://www.youtube-nocookie.com/embed/${id}?autoplay=0`,'_blank','width=640,height=400');
+  admNotify('تم فتح الـ Embed في نافذة جديدة — تحقق منه','#c9a84c');
+}
+
+async function delVideo(id){
+  if(!confirm('حذف الفيديو؟'))return;
+  admNotify('جاري الحذف...','#c9a84c');
+  const {error}=await sb.from('videos').delete().eq('id',id);
+  if(error){
+    let msg=error.message||'خطأ';
+    if(error.code==='42501'||msg.includes('policy')||msg.includes('permission')){
+      admNotify('خطأ RLS — شغّل SQL الإصلاح من تبويب الأمان','#e74c3c');
+    } else {
+      admNotify('خطأ: '+msg,'#e74c3c');
+    }
+    console.error('delVideo error:',error);
+    return;
+  }
+  await loadVideos();renderVidMgr();renderHomeVids();renderAllVids();
+  admNotify('تم الحذف ✓','#1db954');
+}
+async function refreshVideos(){await loadVideos();renderVidMgr();renderHomeVids();renderAllVids();admNotify('تم التحديث ✓','#1db954');}
+
+async function loadUsersAdmin(){
+  const el=document.getElementById('usersTBody');
+  el.innerHTML='<tr><td colspan="5" style="text-align:center;padding:14px;color:var(--t3)"><div class="spinner" style="margin:0 auto 7px"></div>جاري التحميل من Supabase...</td></tr>';
+
+  const {data,error}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+
+  if(error){
+    const isRLS=error.code==='42501'||error.message?.includes('policy')||error.message?.includes('permission');
+    el.innerHTML=`<tr><td colspan="5" style="padding:16px">
+      <div style="color:var(--red);font-size:12px;margin-bottom:8px">⚠️ ${error.message||'تعذر التحميل'}</div>
+      ${isRLS?`<div style="background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.2);border-radius:8px;padding:12px;font-size:11px;color:var(--t2);line-height:2">
+        <strong style="color:var(--t)">الحل:</strong> شغّل هذا الـ SQL في Supabase → SQL Editor:<br>
+        <code style="background:#111;padding:2px 6px;border-radius:4px;color:#a29bfe;font-size:10px">
+        DROP POLICY IF EXISTS "admins can view all profiles" ON public.profiles;<br>
+        CREATE POLICY "view all profiles" ON public.profiles FOR SELECT USING (true);
+        </code>
+      </div>`:''}
+    </td></tr>`;
+    return;
+  }
+
+  if(!data||data.length===0){
+    el.innerHTML='<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--t3)">لا يوجد مستخدمون مسجلون بعد</td></tr>';
+    return;
+  }
+
+  el.innerHTML=data.map(u=>`<tr>
+    <td>
+      <div style="display:flex;align-items:center;gap:9px">
+        <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--gold));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0">${u.avatar_url||'م'}</div>
+        <div>
+          <div style="font-size:12px;font-weight:600">${u.name||'—'}</div>
+          <div style="font-size:10px;color:var(--t3)">${u.id?.slice(0,12)}...</div>
+        </div>
+      </div>
+    </td>
+    <td><span class="adm-tag ${u.role==='admin'?'at-r':'at-g'}">${u.role==='admin'?'👑 مدير':'مستخدم'}</span></td>
+    <td style="font-size:11px;text-align:center">${toAr(u.listened_ayahs||0)}</td>
+    <td style="font-size:10px;color:var(--t3)">${u.created_at?new Date(u.created_at).toLocaleDateString('ar-EG'):'—'}</td>
+    <td>
+      <button class="adm-btn ${u.role==='admin'?'adm-btn-d':'adm-btn-g'}" style="padding:4px 10px;font-size:10px"
+        onclick="toggleRole('${u.id}','${u.role}')">
+        ${u.role==='admin'?'تخفيض':'👑 ترقية'}
+      </button>
+    </td>
+  </tr>`).join('');
+}
+
+async function toggleRole(uid,cur){
+  const nr=cur==='admin'?'user':'admin';
+  const {error}=await sb.from('profiles').update({role:nr}).eq('id',uid);
+  if(error){admNotify('خطأ: '+error.message,'#e74c3c');return;}
+  admNotify(nr==='admin'?'تم الترقية 👑':'تم التخفيض','#1db954');
+  loadUsersAdmin();
+  if(uid===curUser?.id){if(curUserProfile)curUserProfile.role=nr;updateUserUI();}
+}
+
+async function viewTable(tbl){
+  const el=document.getElementById('dbViewResult');
+  el.innerHTML='<div style="text-align:center;padding:12px;color:var(--t3)">جاري التحميل...</div>';
+  const {data,error}=await sb.from(tbl).select('*').order('created_at',{ascending:false}).limit(50);
+  if(error||!data){el.innerHTML=`<div class="empty"><span>⚠️</span>${error?.message||'تعذر التحميل'}</div>`;return;}
+  if(!data.length){el.innerHTML='<div class="empty"><span>📋</span>الجدول فارغ</div>';return;}
+  const cols=Object.keys(data[0]);
+  el.innerHTML=`<div class="db-view-wrap"><table class="adm-tbl"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.map(row=>`<tr>${cols.map(c=>{let v=row[c];if(v===null)v='—';else if(typeof v==='object')v=JSON.stringify(v).slice(0,25)+'...';else v=String(v).slice(0,50);return`<td style="font-size:10px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${v}">${v}</td>`;}).join('')}</tr>`).join('')}</tbody></table></div><div style="font-size:11px;color:var(--t3);margin-top:7px">${toAr(data.length)} سجل</div>`;
+}
+
+async function testSbConn(){const el=document.getElementById('sb-test-res');el.classList.add('show');el.textContent='جاري...';try{const {data,error}=await sb.from('videos').select('id').limit(1);el.textContent=error?'❌ '+error.message:'✅ الاتصال يعمل!';}catch(e){el.textContent='❌ '+e.message;}}
+
+function copySqlFix(){
+  const code=document.getElementById('sqlFixCode')?.textContent||'';
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(code).then(()=>admNotify('تم نسخ الكود ✓','#1db954'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=code;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    admNotify('تم نسخ الكود ✓','#1db954');
+  }
+}
+
+function renderAppearancePage(){
+  document.getElementById('site-name').value=SETTINGS.name||'نور';
+  document.getElementById('site-sub').value=SETTINGS.sub||'القرآن الكريم';
+  document.getElementById('customColor').value=SETTINGS.theme||'#7c6af7';
+}
+function saveTheme(){const c=document.getElementById('customColor').value;SETTINGS.theme=c;applyTheme(c);SS('noor8_set',JSON.stringify(SETTINGS));admNotify('تم ✓','#1db954');}
+function saveAppearance(){SETTINGS.name=document.getElementById('site-name').value;SETTINGS.sub=document.getElementById('site-sub').value;document.getElementById('sbLogo').innerHTML=SETTINGS.name.replace('نور','نـ<em>ور</em>');document.getElementById('sbSub').textContent=SETTINGS.sub;SS('noor8_set',JSON.stringify(SETTINGS));admNotify('تم ✓','#1db954');}
+function changePass(){const c=document.getElementById('cur-p').value,n=document.getElementById('new-p').value,cf=document.getElementById('conf-p').value;if(c!==ADM_CREDS.pass){admNotify('كلمة المرور الحالية خاطئة','#e74c3c');return;}if(n!==cf||n.length<4){admNotify('كلمة المرور غير صحيحة','#e74c3c');return;}ADM_CREDS.pass=n;SS('noor8_adm',JSON.stringify(ADM_CREDS));admNotify('تم ✓','#1db954');}
+function buildColorRow(rowId,inputId){const el=document.getElementById(rowId);if(!el)return;el.innerHTML=COLORS.map(c=>`<div class="cdot" style="background:${c}" onclick="document.getElementById('${inputId}').value='${c}';document.querySelectorAll('#${rowId} .cdot').forEach(d=>d.classList.remove('sel'));this.classList.add('sel');applyTheme('${c}')"></div>`).join('');}
+
+const FALLBACK=[{number:1,name:"الفاتحة",englishName:"Al-Fatiha",englishNameTranslation:"The Opening",numberOfAyahs:7,revelationType:"Meccan",juzNumber:1},{number:2,name:"البقرة",englishName:"Al-Baqara",englishNameTranslation:"The Cow",numberOfAyahs:286,revelationType:"Medinan",juzNumber:1},{number:18,name:"الكهف",englishName:"Al-Kahf",englishNameTranslation:"The Cave",numberOfAyahs:110,revelationType:"Meccan",juzNumber:15},{number:36,name:"يس",englishName:"Ya-Sin",englishNameTranslation:"Ya Sin",numberOfAyahs:83,revelationType:"Meccan",juzNumber:22},{number:55,name:"الرحمن",englishName:"Ar-Rahman",englishNameTranslation:"The Beneficent",numberOfAyahs:78,revelationType:"Medinan",juzNumber:27},{number:67,name:"الملك",englishName:"Al-Mulk",englishNameTranslation:"The Sovereignty",numberOfAyahs:30,revelationType:"Meccan",juzNumber:29},{number:78,name:"النبأ",englishName:"An-Naba",englishNameTranslation:"The Tidings",numberOfAyahs:40,revelationType:"Meccan",juzNumber:30},{number:112,name:"الإخلاص",englishName:"Al-Ikhlas",englishNameTranslation:"The Sincerity",numberOfAyahs:4,revelationType:"Meccan",juzNumber:30},{number:113,name:"الفلق",englishName:"Al-Falaq",englishNameTranslation:"The Daybreak",numberOfAyahs:5,revelationType:"Meccan",juzNumber:30},{number:114,name:"الناس",englishName:"An-Nas",englishNameTranslation:"Mankind",numberOfAyahs:6,revelationType:"Meccan",juzNumber:30}];
+
+init();
+</script>
+</body>
+</html>
