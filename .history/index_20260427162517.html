@@ -827,7 +827,7 @@ CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() 
       <div class="ni" data-p="search"      onclick="go('search',this)"><span class="ni-ic">◎</span>البحث</div>
       <div class="ni" data-p="bookmarks"   onclick="go('bookmarks',this)"><span class="ni-ic">◈</span>المحفوظات<span id="bmSbBadge" class="ni-badge" style="display:none"></span></div>
       <div class="ni" data-p="profile"     onclick="go('profile',this)"><span class="ni-ic">◉</span>حسابي</div>
-      <div id="installBtn" class="ni" data-p="profile"><span class="ni-ic">◉</span>تحميل التطبيق</div>
+      <div class="ni" data-p="profile"     onclick="go('profile',this)"><span class="ni-ic">◉</span>حسابي</div>
     </div>
     <div class="sb-sep"></div>
     <div class="sb-lbl">القراء</div>
@@ -2375,30 +2375,6 @@ function buildColorRow(rowId,inputId){const el=document.getElementById(rowId);if
 const FALLBACK=[{number:1,name:"الفاتحة",englishName:"Al-Fatiha",englishNameTranslation:"The Opening",numberOfAyahs:7,revelationType:"Meccan",juzNumber:1},{number:2,name:"البقرة",englishName:"Al-Baqara",englishNameTranslation:"The Cow",numberOfAyahs:286,revelationType:"Medinan",juzNumber:1},{number:18,name:"الكهف",englishName:"Al-Kahf",englishNameTranslation:"The Cave",numberOfAyahs:110,revelationType:"Meccan",juzNumber:15},{number:36,name:"يس",englishName:"Ya-Sin",englishNameTranslation:"Ya Sin",numberOfAyahs:83,revelationType:"Meccan",juzNumber:22},{number:55,name:"الرحمن",englishName:"Ar-Rahman",englishNameTranslation:"The Beneficent",numberOfAyahs:78,revelationType:"Medinan",juzNumber:27},{number:67,name:"الملك",englishName:"Al-Mulk",englishNameTranslation:"The Sovereignty",numberOfAyahs:30,revelationType:"Meccan",juzNumber:29},{number:78,name:"النبأ",englishName:"An-Naba",englishNameTranslation:"The Tidings",numberOfAyahs:40,revelationType:"Meccan",juzNumber:30},{number:112,name:"الإخلاص",englishName:"Al-Ikhlas",englishNameTranslation:"The Sincerity",numberOfAyahs:4,revelationType:"Meccan",juzNumber:30},{number:113,name:"الفلق",englishName:"Al-Falaq",englishNameTranslation:"The Daybreak",numberOfAyahs:5,revelationType:"Meccan",juzNumber:30},{number:114,name:"الناس",englishName:"An-Nas",englishNameTranslation:"Mankind",numberOfAyahs:6,revelationType:"Meccan",juzNumber:30}];
 
 init();
-</script>
-<script>
-  // my script code js
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  document.getElementById('installBtn').style.display = 'block';
-});
-
-document.getElementById('installBtn').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-
-    const result = await deferredPrompt.userChoice;
-    console.log(result.outcome);
-
-    deferredPrompt = null;
-  } else {
-    alert("افتح الموقع من Chrome واضغط Add to Home Screen");
-  }
-});
 </script>
 </body>
 </html>
