@@ -7,6 +7,7 @@
 
 <meta property="og:image" content='https://g.co/gemini/share/ea8a850eeb18'>
 <title>نور — القرآن الكريم</title>
+<link rel="icon" href="favicon.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X8D0MHL338"></script>
@@ -841,7 +842,7 @@ CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() 
       <button class="mob-btn" onclick="openSb()">☰</button>
       <div class="srch">
         <span style="color:var(--t3);font-size:13px">🔍</span>
-        <input id="input1_1" placeholder="ابحث في القرآن..." oninput="liveSearch(this.value)" onfocus="go('search',null)">
+        <input type="text" placeholder="ابحث في القرآن..." oninput="liveSearch(this.value)" onfocus="go('search',null)">
       </div>
       <div class="top-links">
         <span class="tl on" onclick="go('reciters',null);tlA(this)">القراء</span>
@@ -1068,7 +1069,7 @@ CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() 
         <div style="font-size:20px;font-weight:800;margin-bottom:13px">ابحث</div>
         <div class="srch" style="max-width:100%;padding:10px 14px;border-radius:10px;margin-bottom:18px">
           <span style="color:var(--t3);font-size:13px">🔍</span>
-          <input type="text"id="mainSrch"placeholder="سورة، قارئ، فيديو..." oninput="doSearch(this.value)" style="font-size:13px">
+          <input type="text" id="mainSrch" placeholder="سورة، قارئ، فيديو..." oninput="doSearch(this.value)" style="font-size:13px">
         </div>
         <div id="searchContent">
           <div class="sec-hd mb22"><div class="sec-t">التصنيفات</div></div>
@@ -2369,16 +2370,6 @@ function buildColorRow(rowId,inputId){const el=document.getElementById(rowId);if
 const FALLBACK=[{number:1,name:"الفاتحة",englishName:"Al-Fatiha",englishNameTranslation:"The Opening",numberOfAyahs:7,revelationType:"Meccan",juzNumber:1},{number:2,name:"البقرة",englishName:"Al-Baqara",englishNameTranslation:"The Cow",numberOfAyahs:286,revelationType:"Medinan",juzNumber:1},{number:18,name:"الكهف",englishName:"Al-Kahf",englishNameTranslation:"The Cave",numberOfAyahs:110,revelationType:"Meccan",juzNumber:15},{number:36,name:"يس",englishName:"Ya-Sin",englishNameTranslation:"Ya Sin",numberOfAyahs:83,revelationType:"Meccan",juzNumber:22},{number:55,name:"الرحمن",englishName:"Ar-Rahman",englishNameTranslation:"The Beneficent",numberOfAyahs:78,revelationType:"Medinan",juzNumber:27},{number:67,name:"الملك",englishName:"Al-Mulk",englishNameTranslation:"The Sovereignty",numberOfAyahs:30,revelationType:"Meccan",juzNumber:29},{number:78,name:"النبأ",englishName:"An-Naba",englishNameTranslation:"The Tidings",numberOfAyahs:40,revelationType:"Meccan",juzNumber:30},{number:112,name:"الإخلاص",englishName:"Al-Ikhlas",englishNameTranslation:"The Sincerity",numberOfAyahs:4,revelationType:"Meccan",juzNumber:30},{number:113,name:"الفلق",englishName:"Al-Falaq",englishNameTranslation:"The Daybreak",numberOfAyahs:5,revelationType:"Meccan",juzNumber:30},{number:114,name:"الناس",englishName:"An-Nas",englishNameTranslation:"Mankind",numberOfAyahs:6,revelationType:"Meccan",juzNumber:30}];
 
 init();
-</script>
-
-<script>
-//my code js
-const input1 = document.getElementById("input1_1");
-const input2 = document.getElementById("mainSrch");
-
-input1.addEventListener("input", function () {
-    input2.value = input1.value;
-});
 </script>
 </body>
 </html>
