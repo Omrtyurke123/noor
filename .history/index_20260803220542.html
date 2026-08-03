@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +8,10 @@
 
 <meta property="og:image" content='https://g.co/gemini/share/ea8a850eeb18'>
 <title>نور — القرآن الكريم</title>
-<link rel="apple-touch-icon" href="icon.png">
+<!-- code add imge for website on hmoe scrien phone  -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="/photo.jpg">
 <link rel="icon" href="/photo.jpg" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
@@ -52,7 +56,7 @@ html,body{height:100%;font-family:'Tajawal',sans-serif;background:var(--bg);colo
 .mob-ov{display:none;inset:0;background:rgba(0,0,0,.6);z-index:99;backdrop-filter:blur(4px)}
 .mob-btn{display:none;width:34px;height:34px;border-radius:var(--rs);background:var(--bg3);border:1px solid var(--bdr);color:var(--t2);cursor:pointer;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 
-/* ── SIDEBAR ── */
+/*o ── SIDEBAR ── */
 .sb{background:var(--bg2);border-left:1px solid var(--bdr);display:flex;flex-direction:column;overflow:hidden}
 .sb-top{padding:18px 16px 10px;flex-shrink:0}
 .sb-logo{font-size:19px;font-weight:800}.sb-logo em{color:var(--ac);font-style:normal}
@@ -824,6 +828,7 @@ CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() 
       <div class="ni" data-p="search"      onclick="go('search',this)"><span class="ni-ic">◎</span>البحث</div>
       <div class="ni" data-p="bookmarks"   onclick="go('bookmarks',this)"><span class="ni-ic">◈</span>المحفوظات<span id="bmSbBadge" class="ni-badge" style="display:none"></span></div>
       <div class="ni" data-p="profile"     onclick="go('profile',this)"><span class="ni-ic">◉</span>حسابي</div>
+      <div id="installBtn" class="ni" data-p="profile"><span class="ni-ic">◉</span>تحميل التطبيق</div>
     </div>
     <div class="sb-sep"></div>
     <div class="sb-lbl">القراء</div>
@@ -1135,7 +1140,7 @@ CREATE POLICY "profiles_delete" ON public.profiles FOR DELETE USING (auth.uid() 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ════════════════════ SUPABASE ════════════════════ */
-const SB_URL='https://tecmdbntjvtdkwbzfhjp.supabase.co';
+const SB_URL='https://khjrtofmpeiboxqmjiwq.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlY21kYm50anZ0ZGt3YnpmaGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNzE0ODcsImV4cCI6MjA4OTc0NzQ4N30.g-yV7dKVdRKrIE0kkqcjzqnCB1ehjA-K4At9lasPvQY';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
@@ -2371,6 +2376,30 @@ function buildColorRow(rowId,inputId){const el=document.getElementById(rowId);if
 const FALLBACK=[{number:1,name:"الفاتحة",englishName:"Al-Fatiha",englishNameTranslation:"The Opening",numberOfAyahs:7,revelationType:"Meccan",juzNumber:1},{number:2,name:"البقرة",englishName:"Al-Baqara",englishNameTranslation:"The Cow",numberOfAyahs:286,revelationType:"Medinan",juzNumber:1},{number:18,name:"الكهف",englishName:"Al-Kahf",englishNameTranslation:"The Cave",numberOfAyahs:110,revelationType:"Meccan",juzNumber:15},{number:36,name:"يس",englishName:"Ya-Sin",englishNameTranslation:"Ya Sin",numberOfAyahs:83,revelationType:"Meccan",juzNumber:22},{number:55,name:"الرحمن",englishName:"Ar-Rahman",englishNameTranslation:"The Beneficent",numberOfAyahs:78,revelationType:"Medinan",juzNumber:27},{number:67,name:"الملك",englishName:"Al-Mulk",englishNameTranslation:"The Sovereignty",numberOfAyahs:30,revelationType:"Meccan",juzNumber:29},{number:78,name:"النبأ",englishName:"An-Naba",englishNameTranslation:"The Tidings",numberOfAyahs:40,revelationType:"Meccan",juzNumber:30},{number:112,name:"الإخلاص",englishName:"Al-Ikhlas",englishNameTranslation:"The Sincerity",numberOfAyahs:4,revelationType:"Meccan",juzNumber:30},{number:113,name:"الفلق",englishName:"Al-Falaq",englishNameTranslation:"The Daybreak",numberOfAyahs:5,revelationType:"Meccan",juzNumber:30},{number:114,name:"الناس",englishName:"An-Nas",englishNameTranslation:"Mankind",numberOfAyahs:6,revelationType:"Meccan",juzNumber:30}];
 
 init();
+</script>
+<script>
+  // my script code js
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  document.getElementById('installBtn').style.display = 'block';
+});
+
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+    console.log(result.outcome);
+
+    deferredPrompt = null;
+  } else {
+    alert("افتح الموقع من Chrome واضغط Add to Home Screen");
+  }
+});
 </script>
 </body>
 </html>
